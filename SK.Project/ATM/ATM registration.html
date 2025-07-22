@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>S.K Bank - ATM Card Activation</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #b2ebf2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card-box {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 420px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0077b6;
+      margin-bottom: 20px;
+      animation: slideDown 1s ease-in-out;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0288d1;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #0277bd;
+    }
+
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .atm-details {
+      margin-top: 10px;
+      background: #f1f1f1;
+      padding: 12px;
+      border-radius: 8px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card-box">
+  <h1>💳 ATM Activation</h1>
+  <input type="text" id="accInput" placeholder="Enter Account Number">
+  <input type="text" id="custInput" placeholder="Enter Customer ID">
+  <button onclick="activateATM()">Activate ATM Card</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  function generateCardNumber() {
+    return '5' + Math.floor(100000000000000 + Math.random() * 900000000000000).toString();
+  }
+
+  function generateCVV() {
+    return Math.floor(100 + Math.random() * 900).toString();
+  }
+
+  function generateExpiry() {
+    const now = new Date();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = String((now.getFullYear() + 5) % 100).padStart(2, '0');
+    return `${month}/${year}`;
+  }
+
+  function activateATM() {
+    const accNo = document.getElementById("accInput").value.trim();
+    const custId = document.getElementById("custInput").value.trim();
+    const resultBox = document.getElementById("result");
+    resultBox.innerHTML = "";
+
+    const data = JSON.parse(localStorage.getItem(accNo));
+
+    if (!data || data.customerId !== custId) {
+      resultBox.style.color = "red";
+      resultBox.textContent = "❌ Invalid Account Number or Customer ID.";
+      return;
+    }
+
+    // Generate and save ATM card details
+    const atmCardNumber = generateCardNumber();
+    const cvv = generateCVV();
+    const expiry = generateExpiry();
+
+    data.atmCardNumber = atmCardNumber;
+    data.expiryDate = expiry;
+    data.cvv = cvv;
+
+    localStorage.setItem(accNo, JSON.stringify(data));
+
+    resultBox.style.color = "green";
+    resultBox.innerHTML = `
+      ✅ ATM Card Activated!<br><br>
+      <div class="atm-details">
+        <p><strong>ATM Card No:</strong> ${atmCardNumber}</p>
+        <p><strong>Expiry Date:</strong> ${expiry}</p>
+        <p><strong>CVV:</strong> ${cvv}</p>
+      </div>
+    `;
+  }
+</script>
+
+</body>
+</html>

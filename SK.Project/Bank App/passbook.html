@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Passbook by Mobile - S.K Bank</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #e3f2fd;
+      padding: 20px;
+      margin: 0;
+    }
+
+    h2 {
+      text-align: center;
+      color: #01579b;
+      animation: fadeDown 1s ease;
+    }
+
+    .input-box {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 250px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-left: 10px;
+      background-color: #0288d1;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .passbook {
+      display: flex;
+      flex-direction: column;
+      margin-top: 30px;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      animation: fadeIn 1s ease;
+    }
+
+    .row {
+      margin: 5px 0;
+      line-height: 1.6;
+    }
+
+    .label {
+      font-weight: bold;
+      color: #006064;
+    }
+
+    .signature {
+      margin-top: 40px;
+      text-align: right;
+      font-family: cursive;
+      font-size: 16px;
+      color: #00695c;
+    }
+
+    @keyframes fadeDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📘 Passbook by Mobile Number</h2>
+
+  <div class="input-box">
+    <input type="text" id="mobile" placeholder="Enter Mobile Number" />
+    <button onclick="loadPassbook()">Show</button>
+  </div>
+
+  <div id="passbook" class="passbook" style="display: none;"></div>
+
+  <script>
+    function loadPassbook() {
+      const mobile = document.getElementById("mobile").value.trim();
+      const user = JSON.parse(localStorage.getItem("SKUSER-" + mobile));
+
+      const passbookDiv = document.getElementById("passbook");
+      if (!user) {
+        alert("❌ User not found.");
+        passbookDiv.style.display = "none";
+        return;
+      }
+
+      const html = `
+        <div class="row"><span class="label">CIF No:</span> ${user.cifNo || 'SKCIF' + user.accountNumber?.slice(-4)}</div>
+        <div class="row"><span class="label">Account No:</span> ${user.accountNumber}</div>
+        <div class="row"><span class="label">Customer ID:</span> ${user.customerId || 'SKID' + user.accountNumber?.slice(-4)}</div>
+        <div class="row"><span class="label">Phone:</span> ${user.mobile}</div>
+        <div class="row"><span class="label">Email:</span> ${user.email}</div>
+        <div class="row"><span class="label">D.O.B:</span> ${user.dob || 'N/A'}</div>
+        <div class="row"><span class="label">Mode:</span> ${user.mode || 'Single / Merit'}</div>
+        <div class="row"><span class="label">Nominee Reg No:</span> ${user.nomineeRegNo || 'SKNOM' + user.accountNumber?.slice(-4)}</div>
+        <div class="row"><span class="label">PIN Code:</span> ${user.pinCode}</div>
+        <div class="row"><span class="label">Branch:</span> ${user.branch || 'Rayagada'}</div>
+        <div class="row"><span class="label">Branch Code:</span> ${user.branchCode || 'RGD001'}</div>
+        <div class="row"><span class="label">Date of Issue:</span> ${user.issueDate || '2025-06-01'}</div>
+        <div class="row"><span class="label">IFSC:</span> ${user.ifsc || 'SKBK0001234'}</div>
+        <div class="row"><span class="label">MICR:</span> ${user.micr || '123456789'}</div>
+        <div class="signature">Branch Manager<br>S.K SUSHANTA</div>
+      `;
+
+      passbookDiv.innerHTML = html;
+      passbookDiv.style.display = "block";
+    }
+  </script>
+
+</body>
+</html>

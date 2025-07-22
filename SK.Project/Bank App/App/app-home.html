@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>S.K Bank - Home</title>
+</head>
+<body style="text-align:center; font-family:Arial; padding:30px; background:#e0f7fa;">
+  <h2>🏦 Welcome to S.K Bank App</h2>
+  <p id="info">Loading your info...</p>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("SK_ACTIVE_USER"));
+    if (!user) {
+      window.location.href = "login.html";
+    } else {
+      document.getElementById("info").innerHTML = `
+        👤 Mobile: <strong>${user.mobile}</strong><br>
+        🏦 Account Number: <strong>${user.accountNumber}</strong><br>
+        🆔 Customer ID: <strong>${user.customerId}</strong><br>
+        💳 UPI ID: <strong>${user.upiId}</strong><br>
+        📊 Barcode: <strong>${user.barcode}</strong>
+      `;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>S.K Bank - Transaction History Select</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #d0f0f8, #b2ebf2);
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      color: #0077b6;
+      margin-bottom: 20px;
+      animation: slideDown 1s ease-in-out;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      max-width: 480px;
+      width: 100%;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0288d1;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #0277bd;
+    }
+
+    .history {
+      margin-top: 20px;
+      background: #f1f8ff;
+      border-radius: 10px;
+      padding: 10px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 15px;
+    }
+
+    .history div {
+      border-bottom: 1px solid #ccc;
+      padding: 8px 0;
+    }
+
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+      color: red;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<h1>📋 Transaction History</h1>
+
+<div class="container">
+  <select id="type">
+    <option value="account">🔢 Bank Account Number</option>
+    <option value="atm">💳 ATM Card Number</option>
+  </select>
+  <input type="text" id="searchInput" placeholder="Enter selected number">
+  <button onclick="showTransactions()">Show History</button>
+  <div id="result" class="result"></div>
+  <div id="history" class="history"></div>
+</div>
+
+<script>
+  function showTransactions() {
+    const searchType = document.getElementById("type").value;
+    const input = document.getElementById("searchInput").value.trim();
+    const result = document.getElementById("result");
+    const historyDiv = document.getElementById("history");
+
+    result.textContent = "";
+    historyDiv.innerHTML = "";
+
+    if (!input) {
+      result.textContent = "⚠️ Please enter the number.";
+      return;
+    }
+
+    let cardNumber = "";
+
+    for (let key in localStorage) {
+      if (localStorage.hasOwnProperty(key)) {
+        try {
+          const user = JSON.parse(localStorage.getItem(key));
+          if (
+            (searchType === "account" && user.accountNumber === input) ||
+            (searchType === "atm" && user.atmCardNumber === input)
+          ) {
+            cardNumber = user.atmCardNumber;
+            break;
+          }
+        } catch (e) {}
+      }
+    }
+
+    if (!cardNumber) {
+      result.textContent = "❌ No user found with the provided number.";
+      return;
+    }
+
+    const txKey = "transactions-" + cardNumber;
+    const txList = JSON.parse(localStorage.getItem(txKey)) || [];
+
+    if (txList.length === 0) {
+      result.textContent = "📂 No transaction history found.";
+      return;
+    }
+
+    historyDiv.innerHTML = "<strong>✅ Transaction List:</strong><br>";
+    txList.forEach(tx => {
+      historyDiv.innerHTML += `
+        <div>
+          🕓 ${tx.date}<br>
+          💼 ${tx.type}: ₹${tx.amount}<br>
+          💰 Balance: ₹${tx.balance}
+        </div>`;
+    });
+  }
+</script>
+
+</body>
+</html>

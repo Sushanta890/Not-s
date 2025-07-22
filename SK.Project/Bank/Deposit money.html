@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>S.K Bank - Deposit Money</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #b2ebf2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .deposit-box {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      animation: fadeIn 1s ease-in-out;
+    }
+    h1 {
+      text-align: center;
+      color: #0077b6;
+      margin-bottom: 20px;
+      animation: slideDown 1s ease-in-out;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0288d1;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #0277bd;
+    }
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes slideDown {
+      from { transform: translateY(-30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="deposit-box">
+  <h1>💵 Deposit Money</h1>
+  <input type="text" id="accountInput" placeholder="Enter Account Number" />
+  <input type="number" id="amountInput" placeholder="Enter Amount" />
+  <button onclick="depositMoney()">Deposit</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  function depositMoney() {
+    const accNo = document.getElementById("accountInput").value.trim();
+    const amount = parseFloat(document.getElementById("amountInput").value.trim());
+    const resultDiv = document.getElementById("result");
+    const accountData = JSON.parse(localStorage.getItem(accNo));
+
+    if (!accNo || isNaN(amount) || amount <= 0) {
+      resultDiv.style.color = "red";
+      resultDiv.textContent = "⚠️ Please enter valid account number and amount.";
+      return;
+    }
+
+    if (accountData) {
+      accountData.balance += amount;
+      localStorage.setItem(accNo, JSON.stringify(accountData));
+      resultDiv.style.color = "green";
+      resultDiv.innerHTML = `✅ ₹${amount} deposited.<br>🧾 New Balance: ₹${accountData.balance}`;
+    } else {
+      resultDiv.style.color = "red";
+      resultDiv.textContent = "❌ Account not found!";
+    }
+  }
+  
+</script>
+
+</body>
+</html>

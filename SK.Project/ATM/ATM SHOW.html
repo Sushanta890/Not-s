@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>S.K Bank - ATM Card Details</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #b2ebf2);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 50px 20px;
+    }
+
+    h1 {
+      color: #0077b6;
+      margin-bottom: 20px;
+      animation: slideDown 1s ease-in-out;
+    }
+
+    .input-box {
+      max-width: 400px;
+      width: 100%;
+      margin-bottom: 30px;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 90%;
+      padding: 12px;
+      background: #0288d1;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #0277bd;
+    }
+
+    .card {
+      width: 350px;
+      height: 200px;
+      background: linear-gradient(to right, #2196f3, #21cbf3);
+      border-radius: 20px;
+      color: white;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      animation: cardFade 1.2s ease-in-out;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .card-number {
+      font-size: 20px;
+      letter-spacing: 2px;
+      margin: 20px 0 10px;
+    }
+
+    .card-details {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+
+    .card-holder {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes cardFade {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<h1>💳 View ATM Card Details</h1>
+
+<div class="input-box">
+  <input type="text" id="accountInput" placeholder="Enter Account Number" />
+  <button onclick="showCard()">Show Card</button>
+</div>
+
+<div class="card hidden" id="cardBox">
+  <h3>S.K BANK</h3>
+  <div class="card-number" id="cardNumber">•••• •••• •••• ••••</div>
+  <div class="card-details">
+    <div>
+      <p>Expiry</p>
+      <strong id="expiryDate">MM/YY</strong>
+    </div>
+    <div>
+      <p>CVV</p>
+      <strong id="cvvCode">•••</strong>
+    </div>
+  </div>
+  <div class="card-holder" id="cardHolder">CARD HOLDER</div>
+</div>
+
+<script>
+  function formatCardNumber(num) {
+    return num.replace(/(.{4})/g, "$1 ").trim();
+  }
+
+  function showCard() {
+    const accNo = document.getElementById("accountInput").value.trim();
+    const data = JSON.parse(localStorage.getItem(accNo));
+
+    const cardBox = document.getElementById("cardBox");
+    const cardNumber = document.getElementById("cardNumber");
+    const expiryDate = document.getElementById("expiryDate");
+    const cvvCode = document.getElementById("cvvCode");
+    const cardHolder = document.getElementById("cardHolder");
+
+    if (data && data.atmCardNumber && data.expiryDate && data.cvv) {
+      cardNumber.textContent = formatCardNumber(data.atmCardNumber);
+      expiryDate.textContent = data.expiryDate;
+      cvvCode.textContent = data.cvv;
+      cardHolder.textContent = data.fullName || "CARD HOLDER";
+      cardBox.classList.remove("hidden");
+    } else {
+      alert("❌ No ATM card found for this account.");
+      cardBox.classList.add("hidden");
+    }
+  }
+</script>
+
+</body>
+</html>

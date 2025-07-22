@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ATM PIN Activation - S.K Bank</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #b2ebf2);
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      color: #0077b6;
+      margin-bottom: 20px;
+      animation: slideDown 1s ease-in-out;
+    }
+
+    .pin-box {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 420px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0288d1;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #0277bd;
+    }
+
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<h1>🔐 ATM PIN Activation</h1>
+
+<div class="pin-box">
+  <input type="text" id="card" placeholder="Enter ATM Card Number">
+  <input type="password" id="pin" placeholder="Enter New 4-digit PIN">
+  <input type="password" id="rePin" placeholder="Re-enter PIN">
+  <button onclick="activatePin()">Activate PIN</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  function activatePin() {
+    const card = document.getElementById("card").value.trim();
+    const pin = document.getElementById("pin").value.trim();
+    const rePin = document.getElementById("rePin").value.trim();
+    const result = document.getElementById("result");
+
+    if (!card || !pin || !rePin) {
+      result.style.color = "red";
+      result.textContent = "⚠️ All fields are required.";
+      return;
+    }
+
+    if (pin.length !== 4 || isNaN(pin)) {
+      result.style.color = "red";
+      result.textContent = "⚠️ PIN must be exactly 4 digits.";
+      return;
+    }
+
+    if (pin !== rePin) {
+      result.style.color = "red";
+      result.textContent = "❌ PINs do not match.";
+      return;
+    }
+
+    let found = false;
+
+    for (let key in localStorage) {
+      if (localStorage.hasOwnProperty(key)) {
+        try {
+          const user = JSON.parse(localStorage.getItem(key));
+          if (user && user.atmCardNumber === card) {
+            user.atmPin = pin;
+            localStorage.setItem(key, JSON.stringify(user));
+            result.style.color = "green";
+            result.textContent = "✅ ATM PIN successfully activated!";
+            found = true;
+            break;
+          }
+        } catch (e) {
+          console.warn("Invalid data in localStorage for", key);
+        }
+      }
+    }
+
+    if (!found) {
+      result.style.color = "red";
+      result.textContent = "❌ ATM Card not found.";
+    }
+  }
+</script>
+
+</body>
+</html>

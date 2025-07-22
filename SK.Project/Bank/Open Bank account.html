@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>S.K Bank - Open Account</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #b2ebf2);
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #0077b6;
+      animation: fadeInDown 2s ease-in-out;
+    }
+    .form-container {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      max-width: 700px;
+      margin: 0 auto;
+      animation: slideIn 1s ease-in-out;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #0288d1;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      width: 100%;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #0277bd;
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-100px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Welcome to S.K Bank</h1>
+<div class="form-container">
+  <h2>Open Bank Account</h2>
+  <form id="bankForm">
+    <input type="text" id="fullName" placeholder="Full Name" required>
+    <input type="text" id="fatherName" placeholder="Father's Name" required>
+    <input type="text" id="motherName" placeholder="Mother's Name" required>
+    <input type="date" id="dob" required>
+    <input type="text" id="mobile" placeholder="Mobile Number" required>
+    <input type="email" id="email" placeholder="Email ID" required>
+    <input type="text" id="address" placeholder="Address" required>
+    <input type="text" id="village" placeholder="Village" required>
+    
+    <select id="accountType" required>
+      <option value="">Select Account Type</option>
+      <option value="Savings">Savings</option>
+      <option value="Current">Current</option>
+    </select>
+
+    <select id="country">
+      <option value="India">India</option>
+    </select>
+    <select id="state">
+      <option value="Odisha">Odisha</option>
+    </select>
+    <input type="text" id="city" placeholder="City" required>
+    <input type="text" id="block" placeholder="Block" required>
+    <input type="text" id="branch" placeholder="Branch" required>
+    
+    <select id="category">
+      <option value="">Select Category</option>
+      <option value="Single">Single</option>
+      <option value="Merit">Merit</option>
+    </select>
+
+    <button type="submit">Create Account</button>
+  </form>
+</div>
+
+<script>
+  function generateId(length) {
+    return Math.floor(Math.random() * Math.pow(10, length)).toString().padStart(length, '0');
+  }
+
+  document.getElementById("bankForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const data = {
+      fullName: document.getElementById("fullName").value,
+      fatherName: document.getElementById("fatherName").value,
+      motherName: document.getElementById("motherName").value,
+      dob: document.getElementById("dob").value,
+      mobile: document.getElementById("mobile").value,
+      email: document.getElementById("email").value,
+      address: document.getElementById("address").value,
+      village: document.getElementById("village").value,
+      accountType: document.getElementById("accountType").value,
+      country: document.getElementById("country").value,
+      state: document.getElementById("state").value,
+      city: document.getElementById("city").value,
+      block: document.getElementById("block").value,
+      branch: document.getElementById("branch").value,
+      category: document.getElementById("category").value,
+      cifNo: generateId(9),
+      accountNumber: generateId(10),
+      customerId: generateId(8),
+      nomRegNo: generateId(6),
+      dateOfIssue: new Date().toLocaleDateString(),
+      ifsc: "SKBANK0001",
+      pinCode: generateId(4),
+      balance: 0
+    };
+
+    // Save to localStorage using Account Number as key
+    localStorage.setItem(data.accountNumber, JSON.stringify(data));
+
+    alert(`✅ Account Created!
+CIF No: ${data.cifNo}
+Account No: ${data.accountNumber}
+Customer ID: ${data.customerId}
+Nomination No: ${data.nomRegNo}
+IFSC: ${data.ifsc}
+PIN: ${data.pinCode}`);
+
+    document.getElementById("bankForm").reset();
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>QR Upload Payment - S.K Bank</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f9ff;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #01579b;
+      margin-bottom: 20px;
+      animation: fadeDown 1s ease;
+    }
+
+    .box {
+      background: white;
+      max-width: 420px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease-in;
+    }
+
+    input[type="file"], input[type="text"], input[type="number"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #0288d1;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    canvas {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes fadeDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📤 Upload QR Code - Pay via UPI</h2>
+
+  <div class="box">
+    <input type="file" id="qrInput" accept="image/*" onchange="readQR()" />
+    
+    <label>📱 Mobile Number</label>
+    <input type="text" id="mobile" placeholder="Enter your mobile number" />
+
+    <label>🔐 4-digit PIN</label>
+    <input type="password" id="pin" maxlength="4" placeholder="Enter your PIN" />
+
+    <label>💰 Amount</label>
+    <input type="number" id="amount" placeholder="Enter amount to send" />
+
+    <label>🔁 UPI ID (from QR)</label>
+    <input type="text" id="upiId" readonly />
+
+    <button onclick="payByUPI()">Pay Now</button>
+
+    <div class="result" id="result"></div>
+
+    <canvas id="qrCanvas"></canvas>
+  </div>
+
+  <script>
+    function getUser(mobile) {
+      const data = localStorage.getItem("SKUSER-" + mobile);
+      return data ? JSON.parse(data) : null;
+    }
+
+    function readQR() {
+      const input = document.getElementById('qrInput');
+      const canvas = document.getElementById('qrCanvas');
+      const ctx = canvas.getContext('2d');
+      const file = input.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function () {
+        const img = new Image();
+        img.onload = function () {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const code = jsQR(imageData.data, imageData.width, imageData.height);
+          if (code) {
+            document.getElementById('upiId').value = code.data;
+          } else {
+            alert("❌ QR Code not detected. Try another image.");
+          }
+        };
+        img.src = reader.result;
+      };
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function payByUPI() {
+      const mobile = document.getElementById("mobile").value.trim();
+      const pin = document.getElementById("pin").value.trim();
+      const amount = parseFloat(document.getElementById("amount").value.trim());
+      const upiId = document.getElementById("upiId").value.trim();
+      const result = document.getElementById("result");
+
+      const user = getUser(mobile);
+
+      if (!user || user.pinCode !== pin) {
+        result.style.color = "red";
+        result.textContent = "❌ Invalid mobile number or PIN.";
+        return;
+      }
+
+      if (!upiId || isNaN(amount) || amount <= 0) {
+        result.style.color = "red";
+        result.textContent = "❌ Enter valid amount and scan QR.";
+        return;
+      }
+
+      if (!user.balance) user.balance = 10000;
+
+      if (amount > user.balance) {
+        result.style.color = "red";
+        result.textContent = "❌ Insufficient balance.";
+        return;
+      }
+
+      user.balance -= amount;
+      localStorage.setItem("SKUSER-" + mobile, JSON.stringify(user));
+
+      result.style.color = "green";
+      result.innerHTML = `✅ ₹${amount.toFixed(2)} sent to <strong>${upiId}</strong><br>💰 New Balance: ₹${user.balance.toFixed(2)}`;
+    }
+  </script>
+
+</body>
+</html>

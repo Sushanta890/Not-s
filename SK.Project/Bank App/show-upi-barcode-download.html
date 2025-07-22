@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>S.K Bank - UPI, Barcode, QR Code</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #e0f7fa;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #006064;
+      animation: fadeDown 1s ease;
+    }
+
+    .form-box {
+      background: #ffffff;
+      padding: 25px;
+      margin: auto;
+      max-width: 420px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1.2s ease;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #00838f;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .output {
+      margin-top: 20px;
+    }
+
+    canvas {
+      margin-top: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🔍 View UPI, Barcode & Download QR</h2>
+
+  <div class="form-box">
+    <input type="text" id="mobile" placeholder="📱 Enter Mobile Number" />
+    <button onclick="generateQR()">Show QR & UPI</button>
+
+    <div class="output" id="output" style="display:none;">
+      <span class="label">💳 UPI ID:</span>
+      <div id="upiIdDisplay"></div>
+
+      <span class="label">📊 Barcode:</span>
+      <div id="barcodeText"></div>
+
+      <span class="label">🔲 QR Code:</span>
+      <canvas id="qrCanvas"></canvas>
+
+      <button onclick="downloadQR()">⬇️ Download QR Code</button>
+    </div>
+  </div>
+
+  <script>
+    function getUser(mobile) {
+      const data = localStorage.getItem("SKUSER-" + mobile);
+      return data ? JSON.parse(data) : null;
+    }
+
+    function generateQR() {
+      const mobile = document.getElementById("mobile").value.trim();
+      const user = getUser(mobile);
+
+      const upiIdDisplay = document.getElementById("upiIdDisplay");
+      const barcodeText = document.getElementById("barcodeText");
+      const canvas = document.getElementById("qrCanvas");
+      const output = document.getElementById("output");
+
+      if (!user) {
+        alert("❌ User not found. Please register first.");
+        return;
+      }
+
+      const upiId = user.upiId || (mobile + "@skbank");
+      const barcode = user.barcode || (user.accountNumber + "|" + mobile);
+
+      upiIdDisplay.textContent = upiId;
+      barcodeText.textContent = barcode;
+
+      const qr = new QRious({
+        element: canvas,
+        value: upiId,
+        size: 180
+      });
+
+      output.style.display = "block";
+    }
+
+    function downloadQR() {
+      const canvas = document.getElementById("qrCanvas");
+      const link = document.createElement("a");
+      link.download = "upi-qr-code.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+  </script>
+
+</body>
+</html>

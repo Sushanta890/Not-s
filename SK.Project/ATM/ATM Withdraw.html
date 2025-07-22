@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>S.K Bank - ATM Withdraw + History</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #b2ebf2);
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      color: #0077b6;
+      margin-bottom: 20px;
+      animation: slideDown 1s ease-in-out;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      max-width: 450px;
+      width: 100%;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0288d1;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #0277bd;
+    }
+
+    .result {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .history {
+      margin-top: 25px;
+      padding: 10px;
+      background: #f1f8ff;
+      border-radius: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 15px;
+    }
+
+    .history div {
+      border-bottom: 1px dashed #ccc;
+      padding: 6px 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>🏧 ATM Withdraw & History</h1>
+
+<div class="container">
+  <input type="text" id="card" placeholder="Enter ATM Card Number">
+  <input type="password" id="pin" placeholder="Enter PIN">
+  <input type="number" id="amount" placeholder="Enter Amount to Withdraw">
+  <button onclick="withdrawMoney()">Withdraw</button>
+  <div id="result" class="result"></div>
+  <div class="history" id="history"></div>
+</div>
+
+<script>
+  function withdrawMoney() {
+    const card = document.getElementById("card").value.trim();
+    const pin = document.getElementById("pin").value.trim();
+    const amount = parseFloat(document.getElementById("amount").value.trim());
+    const result = document.getElementById("result");
+    const historyDiv = document.getElementById("history");
+
+    result.textContent = "";
+    historyDiv.innerHTML = "";
+
+    if (!card || !pin || isNaN(amount)) {
+      result.style.color = "red";
+      result.textContent = "⚠️ Please fill all fields.";
+      return;
+    }
+
+    if (amount <= 0) {
+      result.style.color = "red";
+      result.textContent = "⚠️ Enter a valid amount.";
+      return;
+    }
+
+    let found = false;
+
+    for (let key in localStorage) {
+      if (localStorage.hasOwnProperty(key)) {
+        try {
+          const account = JSON.parse(localStorage.getItem(key));
+          if (account.atmCardNumber === card && account.atmPin === pin) {
+            if ((account.balance || 0) >= amount) {
+              account.balance -= amount;
+
+              // Save updated account
+              localStorage.setItem(key, JSON.stringify(account));
+
+              // Save transaction
+              const txKey = "transactions-" + card;
+              const transactions = JSON.parse(localStorage.getItem(txKey)) || [];
+              const now = new Date().toLocaleString();
+              transactions.unshift({
+                type: "Withdraw",
+                amount,
+                date: now,
+                balance: account.balance
+              });
+              localStorage.setItem(txKey, JSON.stringify(transactions));
+
+              result.style.color = "green";
+              result.textContent = `✅ ₹${amount} withdrawn. Balance: ₹${account.balance}`;
+              displayHistory(txKey);
+            } else {
+              result.style.color = "red";
+              result.textContent = "❌ Insufficient balance.";
+            }
+            found = true;
+            break;
+          }
+        } catch (e) {
+          console.warn("Invalid data at key:", key);
+        }
+      }
+    }
+
+    if (!found) {
+      result.style.color = "red";
+      result.textContent = "❌ Invalid card number or PIN.";
+    }
+  }
+
+  function displayHistory(txKey) {
+    const historyDiv = document.getElementById("history");
+    const transactions = JSON.parse(localStorage.getItem(txKey)) || [];
+
+    if (transactions.length === 0) {
+      historyDiv.innerHTML = "📂 No transaction history found.";
+      return;
+    }
+
+    historyDiv.innerHTML = "<strong>📜 Transaction History:</strong><br>";
+    transactions.forEach(tx => {
+      historyDiv.innerHTML += `
+        <div>
+          🕓 ${tx.date}<br>
+          💸 ${tx.type}: ₹${tx.amount} <br>
+          🏦 Balance: ₹${tx.balance}
+        </div>`;
+    });
+  }
+</script>
+
+</body>
+</html>

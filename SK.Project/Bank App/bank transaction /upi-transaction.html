@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>S.K Bank - Transfer Money</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f2f1, #b2dfdb);
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    h2 {
+      color: #00695c;
+      margin-bottom: 20px;
+      animation: fadeDown 1s ease-in-out;
+    }
+
+    .box {
+      background: white;
+      max-width: 420px;
+      margin: auto;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      animation: fadeIn 1s ease-in;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #00796b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes fadeDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>💸 S.K Bank Balance Transfer</h2>
+
+  <div class="box">
+    <input type="text" id="fromAcc" placeholder="Sender Account Number">
+    <input type="text" id="toMobile" placeholder="Receiver Mobile Number">
+    <input type="number" id="amount" placeholder="Enter Amount">
+    <button onclick="transferBalance()">Transfer Money</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function transferBalance() {
+      const fromAcc = document.getElementById("fromAcc").value.trim();
+      const toMobile = document.getElementById("toMobile").value.trim();
+      const amount = parseFloat(document.getElementById("amount").value.trim());
+      const result = document.getElementById("result");
+
+      result.innerHTML = "";
+
+      if (!fromAcc || !toMobile || isNaN(amount) || amount <= 0) {
+        result.style.color = "red";
+        result.textContent = "❌ Please enter valid details.";
+        return;
+      }
+
+      const sender = JSON.parse(localStorage.getItem(fromAcc));
+      if (!sender || sender.balance === undefined || sender.balance < amount) {
+        result.style.color = "red";
+        result.textContent = "❌ Sender account not found or insufficient funds.";
+        return;
+      }
+
+      const link = JSON.parse(localStorage.getItem("BANK-LINK-" + toMobile));
+      if (!link || !link.active) {
+        result.style.color = "red";
+        result.textContent = "❌ Receiver mobile number is not linked to an active account.";
+        return;
+      }
+
+      const receiverAcc = link.accountNumber;
+      const receiver = JSON.parse(localStorage.getItem(receiverAcc)) || {
+        accountNumber: receiverAcc,
+        mobile: toMobile,
+        balance: 0
+      };
+
+      // Perform transaction
+      sender.balance -= amount;
+      receiver.balance = (receiver.balance || 0) + amount;
+
+      // Save both
+      localStorage.setItem(fromAcc, JSON.stringify(sender));
+      localStorage.setItem(receiverAcc, JSON.stringify(receiver));
+
+      result.style.color = "green";
+      result.innerHTML = `✅ ₹${amount.toFixed(2)} transferred to mobile ${toMobile}<br>New Balance: ₹${sender.balance.toFixed(2)}`;
+    }
+  </script>
+
+</body>
+</html>

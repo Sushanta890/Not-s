@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>S.K Bank - Banking Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 40px 20px;
+      background: linear-gradient(to right, #e0f7fa, #b2ebf2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #0077b6;
+      margin-bottom: 20px;
+      animation: slideIn 1s ease-in-out;
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 900px;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .card h2 {
+      color: #0288d1;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #555;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🏦 S.K Bank - Banking Dashboard</h1>
+
+  <div class="menu">
+    <div class="card" onclick="location.href='next.html'">
+      <h2>👤 Account Info</h2>
+      <p>View your bank account details</p>
+    </div>
+    <div class="card" onclick="location.href='ATM/ATM home.html'">
+      <h2>🏧 ATM Services</h2>
+      <p>Manage ATM, PIN, card info, balance</p>
+    </div>
+    <div class="card" onclick="location.href='passbook.html'">
+      <h2>📘 Passbook</h2>
+      <p>See your full bank passbook</p>
+    </div>
+    <div class="card" onclick="location.href='ATM/ATM SHOW.html'">
+      <h2>💳ATM Card</h2>
+      <p>ATM Card, Account number show </p>
+    </div>
+    <div class="card" onclick="location.href='transaction history.html'">
+      <h2>📜 Transactions</h2>
+      <p>Check recent deposits and withdrawals</p>
+    </div>
+    <div class="card" onclick="location.href='Bank App/index.html'">
+      <h2>App</h2>
+      <p>mobile number Bank balance withdraw, deposit and check</p>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 S.K Bank | Designed by S.K Sushanta
+  </footer>
+
+</body>
+</html>

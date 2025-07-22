@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>S.K Bank - Register</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://cdn.jsdelivr.net/npm/qrious"></script> <!-- QR code lib -->
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #e0f7fa;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h2 {
+      color: #0077b6;
+      margin-bottom: 20px;
+    }
+
+    .form-box {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    label {
+      margin-top: 10px;
+      display: block;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background: #0288d1;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      font-size: 14px;
+      background: #f1faff;
+      border-radius: 10px;
+    }
+
+    canvas {
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🔐 Register - S.K Bank App</h2>
+
+  <div class="form-box">
+    <label>🏦 Account Number</label>
+    <input type="text" id="accountNumber">
+
+    <label>🆔 Customer ID</label>
+    <input type="text" id="customerId">
+
+    <label>📱 Mobile Number</label>
+    <input type="text" id="mobile">
+
+    <label>🔑 4-digit PIN</label>
+    <input type="password" maxlength="4" id="pin">
+
+    <button onclick="register()">Register</button>
+
+    <div class="result" id="result" style="display: none;">
+      ✅ UPI ID: <span id="upiId"></span><br>
+      📊 Barcode: <span id="barcodeText"></span><br>
+      📷 QR Code: <canvas id="qrCanvas"></canvas>
+    </div>
+  </div>
+
+  <script>
+    function register() {
+      const acc = document.getElementById("accountNumber").value.trim();
+      const cid = document.getElementById("customerId").value.trim();
+      const mob = document.getElementById("mobile").value.trim();
+      const pin = document.getElementById("pin").value.trim();
+      const res = document.getElementById("result");
+
+      if (!acc || !cid || !mob || pin.length !== 4) {
+        alert("⚠️ All fields are required & PIN must be 4 digits.");
+        return;
+      }
+
+      const upiId = mob + "@skbank";
+      const barcode = acc + "|" + mob;
+
+      const user = {
+        accountNumber: acc,
+        customerId: cid,
+        mobile: mob,
+        pinCode: pin,
+        upiId: upiId,
+        barcode: barcode
+      };
+
+      localStorage.setItem("SKUSER-" + mob, JSON.stringify(user));
+      localStorage.setItem("SK_ACTIVE_USER", JSON.stringify(user));
+
+      // Show result
+      document.getElementById("upiId").textContent = upiId;
+      document.getElementById("barcodeText").textContent = barcode;
+
+      const qr = new QRious({
+        element: document.getElementById("qrCanvas"),
+        value: upiId,
+        size: 150
+      });
+
+      res.style.display = "block";
+    }
+  </script>
+
+</body>
+</html>

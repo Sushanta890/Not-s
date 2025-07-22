@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>S.K Bank - ATM Deposit</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #d0f0f8, #b2ebf2);
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      color: #0077b6;
+      margin-bottom: 20px;
+      animation: slideDown 1s ease-in-out;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      max-width: 450px;
+      width: 100%;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0288d1;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #0277bd;
+    }
+
+    .result {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>💰 ATM Deposit Money</h1>
+
+<div class="container">
+  <input type="text" id="card" placeholder="Enter ATM Card Number">
+  <input type="password" id="pin" placeholder="Enter PIN">
+  <input type="number" id="amount" placeholder="Enter Amount to Deposit">
+  <button onclick="depositMoney()">Deposit</button>
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+  function depositMoney() {
+    const card = document.getElementById("card").value.trim();
+    const pin = document.getElementById("pin").value.trim();
+    const amount = parseFloat(document.getElementById("amount").value.trim());
+    const result = document.getElementById("result");
+
+    if (!card || !pin || isNaN(amount)) {
+      result.style.color = "red";
+      result.textContent = "⚠️ Please fill in all fields.";
+      return;
+    }
+
+    if (amount <= 0) {
+      result.style.color = "red";
+      result.textContent = "⚠️ Enter a valid amount.";
+      return;
+    }
+
+    let found = false;
+
+    for (let key in localStorage) {
+      if (localStorage.hasOwnProperty(key)) {
+        try {
+          const user = JSON.parse(localStorage.getItem(key));
+          if (user.atmCardNumber === card && user.atmPin === pin) {
+            user.balance = (user.balance || 0) + amount;
+
+            // Save updated balance
+            localStorage.setItem(key, JSON.stringify(user));
+
+            // Optional: Save to transaction history
+            const txKey = "transactions-" + card;
+            const transactions = JSON.parse(localStorage.getItem(txKey)) || [];
+            transactions.unshift({
+              type: "Deposit",
+              amount,
+              date: new Date().toLocaleString(),
+              balance: user.balance
+            });
+            localStorage.setItem(txKey, JSON.stringify(transactions));
+
+            result.style.color = "green";
+            result.textContent = `✅ ₹${amount} deposited. New balance: ₹${user.balance}`;
+            found = true;
+            break;
+          }
+        } catch (err) {
+          console.warn("Invalid data at key", key);
+        }
+      }
+    }
+
+    if (!found) {
+      result.style.color = "red";
+      result.textContent = "❌ Invalid card number or PIN.";
+    }
+  }
+</script>
+
+</body>
+</html>

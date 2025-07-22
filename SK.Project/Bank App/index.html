@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>S.K Bank App – Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #e1f5fe;
+    }
+
+    header {
+      background-color: #0288d1;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 24px;
+      font-weight: bold;
+      animation: fadeDown 1s ease;
+    }
+
+    .container {
+      text-align: center;
+      padding: 40px 20px 80px; /* bottom space for nav */
+      animation: fadeIn 1s ease;
+    }
+
+    .btn {
+      display: inline-block;
+      width: 160px;
+      margin: 10px;
+      padding: 14px;
+      background-color: #03a9f4;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #0288d1;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>🏦 S.K Bank App</header>
+
+  <div class="container">
+    <button class="btn" onclick="location.href='App/registration.html'">📝 Register</button>
+    <button class="btn" onclick="location.href='App/login.html'">🔐 Login</button>
+  </div>
+
+
+</body>
+</html>

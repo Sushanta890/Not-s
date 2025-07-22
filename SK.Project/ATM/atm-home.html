@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>S.K Bank - ATM Home</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #d0f0f8, #b2ebf2);
+      padding: 50px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      color: #0077b6;
+      margin-bottom: 10px;
+      animation: slideIn 1s ease-in-out;
+    }
+
+    h3 {
+      color: #555;
+      margin-bottom: 30px;
+      font-weight: normal;
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 800px;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+
+    .card h2 {
+      color: #0288d1;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #555;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🏧 ATM Home - S.K Bank</h1>
+  <h3>Welcome! Manage your ATM card and PIN securely</h3>
+
+  <div class="menu">
+    <div class="card" onclick="location.href='ATM registration.html'">
+      <h2>📝 ATM Registration</h2>
+      <p>Register your ATM card using Account & Customer ID</p>
+    </div>
+    <div class="card" onclick="location.href='ATM PIN Active.html'">
+      <h2>🔐 PIN Activation</h2>
+      <p>Activate or reset your ATM PIN using CVV</p>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 S.K Bank | Designed by S.K Sushanta
+  </footer>
+
+</body>
+</html>

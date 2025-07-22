@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>S.K Bank - Link Bank Account</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #d0f0fd, #e0f7fa);
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #005c99;
+      margin-bottom: 20px;
+      animation: fadeIn 1s ease;
+    }
+
+    .box {
+      background: white;
+      max-width: 420px;
+      margin: auto;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      animation: slideUp 0.8s ease;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #0288d1;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🔗 Link Bank Account to Mobile</h2>
+
+  <div class="box">
+    <input type="text" id="accountNo" placeholder="🏦 Bank Account Number" />
+    <input type="text" id="mobile" placeholder="📱 Mobile Number" />
+    <button onclick="linkAccount()">Link Now</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function linkAccount() {
+      const accNo = document.getElementById("accountNo").value.trim();
+      const mobile = document.getElementById("mobile").value.trim();
+      const result = document.getElementById("result");
+
+      if (!accNo || !mobile) {
+        result.style.color = "red";
+        result.textContent = "❌ Please enter both Account Number and Mobile Number.";
+        return;
+      }
+
+      const data = {
+        accountNumber: accNo,
+        mobile: mobile,
+        active: true,
+        linkedAt: new Date().toLocaleString()
+      };
+
+      // Save with key "BANK-LINK-<mobile>"
+      localStorage.setItem("BANK-LINK-" + mobile, JSON.stringify(data));
+
+      result.style.color = "green";
+      result.innerHTML = `✅ Account <strong>${accNo}</strong> linked with Mobile <strong>${mobile}</strong><br>🟢 Active status saved.`;
+    }
+  </script>
+
+</body>
+</html>
