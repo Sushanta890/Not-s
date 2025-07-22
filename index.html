@@ -1,25 +1,205 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>S.K Sushanta Profile</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #eef2f3;
+    }
 
-  <title>HTML</title>
-  
-  <!-- HTML -->
-  
+    /* Navigation Button */
+    .nav-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: #004080;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 1001;
+    }
 
-  <!-- Custom Styles -->
-  <link rel="stylesheet" href="style.css">
+    /* Sidebar Nav */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -260px;
+      width: 250px;
+      height: 100%;
+      background: #003366;
+      color: white;
+      padding: 30px 20px;
+      transition: left 0.4s ease;
+      z-index: 1000;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar h2 {
+      color: #ffcc00;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      background: #004d99;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      text-align: center;
+      transition: background 0.3s;
+    }
+
+    .sidebar a:hover {
+      background: #0059b3;
+    }
+
+    /* Main Content */
+    .content {
+      padding: 60px 20px 20px 20px;
+      text-align: center;
+    }
+
+    .typing-text {
+      font-size: 24px;
+      color: green;
+      font-weight: bold;
+      height: 30px;
+      margin-bottom: 20px;
+    }
+
+    .images img {
+      width: 180px;
+      height: 120px;
+      margin: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
+    }
+
+    .images img:hover {
+      transform: scale(1.05);
+    }
+
+    .data-box {
+      display: none;
+      background: #e6f7ff;
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .modal img {
+      max-width: 90%;
+      border: 5px solid white;
+      border-radius: 10px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 30px;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
 </head>
-
 <body>
-  <p>Nothing to see huhhbb
-  
-  
-  tui8here...</p>
-  <!-- Project -->
-  <script src="main.js"></script>
+
+<!-- Nav Button -->
+<button class="nav-btn" onclick="toggleSidebar()">☰ Menu</button>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+  <h2>S.K Bank</h2>
+  <a href="register.html">📋 Register</a>
+  <a href="login.html">🔐 Login</a>
+</div>
+
+<!-- Main Content -->
+<div class="content">
+  <h1>Welcome to S.K Sushanta</h1>
+  <div class="typing-text" id="typing"></div>
+
+  <div class="images">
+    <img src="IMG/Sushanta.jpg" onclick="showData(1, this.src)">
+    <img src="IMG/Naresh.png" onclick="showData(2, this.src)">
+    <img src="IMG/KK.png" onclick="showData(3, this.src)">
+  </div>
+
+  <div class="data-box" id="data1"><h3>Image 1</h3><p>Purchase and room item details.</p></div>
+  <div class="data-box" id="data2"><h3>Image 2</h3><p>Weekly/monthly expense report.</p></div>
+  <div class="data-box" id="data3"><h3>Image 3</h3><p>User profile & linked accounts.</p></div>
+</div>
+
+<!-- Full Image Modal -->
+<div id="imageModal" class="modal" onclick="closeModal()">
+  <span class="close-btn" onclick="closeModal()">&times;</span>
+  <img id="fullImage" src="">
+</div>
+
+<script>
+  function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("open");
+  }
+
+  // Auto typing effect
+  const text = "S.K Sushanta";
+  let i = 0;
+  function typeEffect() {
+    if (i < text.length) {
+      document.getElementById("typing").innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typeEffect, 100);
+    }
+  }
+
+  window.onload = () => {
+    typeEffect();
+  };
+
+  function showData(n, src) {
+    document.querySelectorAll('.data-box').forEach(div => div.style.display = 'none');
+    document.getElementById('data' + n).style.display = 'block';
+    document.getElementById('fullImage').src = src;
+    document.getElementById('imageModal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('imageModal').style.display = 'none';
+  }
+</script>
+
 </body>
 </html>

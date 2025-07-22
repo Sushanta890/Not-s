@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Room Purchase Record</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      background: #f3f3f3;
+      animation: fadeIn 0.5s ease-in;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: red;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: darkred;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+    }
+    th, td {
+      border: 1px solid #999;
+      padding: 8px;
+      text-align: center;
+    }
+    .total {
+      font-weight: bold;
+      font-size: 18px;
+      margin-top: 15px;
+      color: #222;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Room Purchase Entry</h2>
+
+  <input id="name" placeholder="Purchase Name">
+  <input id="kg" type="number" placeholder="KG">
+  <input id="gram" type="number" placeholder="Gram">
+  <input id="rs" type="number" placeholder="Rs">
+  <button onclick="saveData()">Save Purchase</button>
+
+  <div id="output"></div>
+
+  <script>
+    // Load and show data on page load
+    let data = JSON.parse(localStorage.getItem("roomData") || "[]");
+    showData();
+
+    function saveData() {
+      const name = document.getElementById("name").value.trim();
+      const kg = parseFloat(document.getElementById("kg").value || 0);
+      const gram = parseFloat(document.getElementById("gram").value || 0);
+      const rs = parseFloat(document.getElementById("rs").value || 0);
+      const date = new Date();
+
+      if (!name || rs <= 0) {
+        alert("Please enter Item Name and Rs");
+        return;
+      }
+
+      const newEntry = { name, kg, gram, rs, date };
+      data.push(newEntry);
+      localStorage.setItem("roomData", JSON.stringify(data));
+      showData();
+
+      // Clear inputs
+      document.getElementById("name").value = "";
+      document.getElementById("kg").value = "";
+      document.getElementById("gram").value = "";
+      document.getElementById("rs").value = "";
+    }
+
+    function showData() {
+      if (data.length === 0) {
+        document.getElementById("output").innerHTML = "<p>No data found.</p>";
+        return;
+      }
+
+      let table = `<table>
+        <tr>
+          <th>Item</th>
+          <th>KG</th>
+          <th>Gram</th>
+          <th>Rs</th>
+          <th>Date</th>
+          <th>Time</th>
+        </tr>`;
+
+      let totalRs = 0;
+
+      data.forEach(entry => {
+        const d = new Date(entry.date);
+        const dateStr = d.toLocaleDateString();
+        const timeStr = d.toLocaleTimeString();
+        totalRs += entry.rs;
+
+        table += `
+          <tr>
+            <td>${entry.name}</td>
+            <td>${entry.kg}</td>
+            <td>${entry.gram}</td>
+            <td>₹${entry.rs}</td>
+            <td>${dateStr}</td>
+            <td>${timeStr}</td>
+          </tr>`;
+      });
+
+      table += `</table>
+        <div class="total">Total ₹: ₹${totalRs}</div>`;
+
+      document.getElementById("output").innerHTML = table;
+    }
+  </script>
+
+</body>
+</html>
