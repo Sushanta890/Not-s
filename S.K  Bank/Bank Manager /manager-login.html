@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manager Login</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #e8f5e9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    form {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      width: 400px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 { text-align: center; }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #43a047;
+      color: white;
+      border: none;
+      margin-top: 15px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .error {
+      color: red;
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<form id="loginForm">
+  <h2>Manager Login</h2>
+  <input type="text" id="accountNo" placeholder="Account Number" required>
+  <input type="text" id="customerId" placeholder="Customer ID" required>
+  <button type="submit">Login</button>
+  <div class="error" id="errorMsg"></div>
+</form>
+
+<script>
+  document.getElementById("loginForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const accNo = document.getElementById("accountNo").value.trim();
+    const custId = document.getElementById("customerId").value.trim();
+    const manager = JSON.parse(localStorage.getItem("managerAccount"));
+    const errorMsg = document.getElementById("errorMsg");
+
+    if (manager && manager.accountNo === accNo && manager.customerId === custId) {
+      sessionStorage.setItem("managerLoggedIn", "true");
+      window.location.href = "manager-home.html";
+    } else {
+      errorMsg.textContent = "Invalid credentials.";
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SK Bank Portal</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #e3f2fd, #b2ebf2);
+      font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      animation: fadeSlideUp 0.6s ease;
+      width: 90%;
+      max-width: 460px;
+    }
+
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      color: #00796b;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin: 15px 0;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      background: #00897b;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #00695c;
+      transform: translateY(-3px);
+    }
+
+    .footer {
+      margin-top: 25px;
+      font-size: 12px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🏦 Welcome to SK Bank Portal</h1>
+
+    <button class="btn" onclick="navigateTo('manager-register.html')">📝 Manager Register </button>
+    <button class="btn" onclick="navigateTo('manager-login.html')">🔐 Manager Login </button>
+    <button class="btn" onclick="navigateTo('manager-search.html')">🔍 Search Customer Account</button>
+    <div class="footer">© 2025 SK Bank — Secure & Simple</div>
+  </div>
+
+  <script>
+    function navigateTo(path) {
+      window.location.href = path;
+    }
+  </script>
+
+</body>
+</html>

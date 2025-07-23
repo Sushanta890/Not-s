@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Open Bank Account</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #e3f2fd;
+      padding: 30px;
+    }
+
+    form {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      animation: slideIn 0.6s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #1565c0;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0d47a1;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    .success {
+      text-align: center;
+      margin-top: 15px;
+      color: green;
+      font-weight: bold;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<form id="accountForm">
+  <h2>Open Bank Account</h2>
+
+  <input type="text" id="firstName" placeholder="First Name" required>
+  <input type="text" id="lastName" placeholder="Last Name" required>
+  <select id="accountType" required>
+    <option value="">Select Account Type</option>
+    <option>Savings</option>
+    <option>Current</option>
+    <option>Fixed Deposit</option>
+  </select>
+  <input type="date" id="dob" required>
+  <input type="tel" id="mobile" placeholder="Mobile Number" pattern="[0-9]{10}" required>
+  <input type="email" id="email" placeholder="Email ID" required>
+  <input type="text" id="aadhar" placeholder="Aadhar Card Number" maxlength="12" required>
+  
+  <input type="text" id="country" placeholder="Country" required>
+  <input type="text" id="state" placeholder="State" required>
+  <input type="text" id="city" placeholder="City" required>
+  <input type="text" id="block" placeholder="Block" required>
+  <input type="text" id="branch" placeholder="Branch" required>
+  <input type="text" id="address" placeholder="Full Address" required>
+  <input type="text" id="village" placeholder="Village Name" required>
+
+  <select id="single" required>
+    <option value="">Single?</option>
+    <option>Yes</option>
+    <option>No</option>
+  </select>
+
+  <button type="submit">Submit</button>
+  <div class="success" id="successMsg"></div>
+</form>
+
+<script>
+  function generate(prefix, length) {
+    let result = prefix;
+    while (result.length < length) {
+      result += Math.floor(Math.random() * 10);
+    }
+    return result;
+  }
+
+  document.getElementById("accountForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const user = {
+      firstName: document.getElementById("firstName").value,
+      lastName: document.getElementById("lastName").value,
+      accountType: document.getElementById("accountType").value,
+      dob: document.getElementById("dob").value,
+      mobile: document.getElementById("mobile").value,
+      email: document.getElementById("email").value,
+      aadhar: document.getElementById("aadhar").value,
+      country: document.getElementById("country").value,
+      state: document.getElementById("state").value,
+      city: document.getElementById("city").value,
+      block: document.getElementById("block").value,
+      branch: document.getElementById("branch").value,
+      address: document.getElementById("address").value,
+      village: document.getElementById("village").value,
+      single: document.getElementById("single").value,
+
+      cifNo: generate("CIF", 12),
+      accountNo: generate("30", 14),
+      customerId: generate("CU", 10),
+      nomRegNo: generate("NOM", 10),
+      dateOfIssue: new Date().toISOString().split("T")[0],
+      ifsc: "BANK0001234",
+      micr: generate("7", 9),
+      balance: 0,
+      transactions: []
+    };
+
+    // Save to localStorage
+    let users = JSON.parse(localStorage.getItem("bankUsers") || "[]");
+    users.push(user);
+    localStorage.setItem("bankUsers", JSON.stringify(users));
+
+    const msg = document.getElementById("successMsg");
+    msg.textContent = "Successfully registered! Redirecting to Home...";
+
+    setTimeout(() => {
+      window.location.href = "home.html";
+    }, 2500);
+  });
+</script>
+
+</body>
+</html>

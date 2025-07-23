@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ATM Card Info Viewer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e1bee7, #ce93d8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      width: 90%;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    input, button {
+      padding: 12px;
+      width: 100%;
+      margin: 12px 0;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #6a1b9a;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .card-box {
+      margin-top: 20px;
+      background: #ede7f6;
+      padding: 20px;
+      border-radius: 12px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.5s ease;
+      text-align: left;
+    }
+
+    .card-box.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .error {
+      color: red;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🔐 ATM Card Viewer</h2>
+  <input type="password" id="pin" placeholder="Enter 4-digit PIN" maxlength="4">
+  <button onclick="revealCard()">Show ATM Card</button>
+  <div id="error" class="error"></div>
+
+  <div id="cardBox" class="card-box">
+    <p><strong>Holder Full Name:</strong> <span id="holderName"></span></p>
+    <p><strong>ATM Card Number:</strong> <span id="cardNumber"></span></p>
+    <p><strong>Expiry Date:</strong> <span id="expiry"></span></p>
+    <p><strong>CVV:</strong> <span id="cvv"></span></p>
+  </div>
+</div>
+
+<script>
+function revealCard() {
+  const pin = document.getElementById("pin").value.trim();
+  const error = document.getElementById("error");
+  const cardBox = document.getElementById("cardBox");
+
+  error.textContent = "";
+  cardBox.classList.remove("show");
+
+  if (pin.length !== 4) {
+    error.textContent = "❌ Enter a valid 4-digit PIN.";
+    return;
+  }
+
+  let foundCard = null;
+  for (let key in localStorage) {
+    if (key.startsWith("atmCard_")) {
+      const card = JSON.parse(localStorage.getItem(key));
+      if (card.pin === pin) {
+        foundCard = card;
+        break;
+      }
+    }
+  }
+
+  if (!foundCard) {
+    error.textContent = "❌ ATM Card not found or invalid PIN.";
+    return;
+  }
+
+  const users = JSON.parse(localStorage.getItem("bankUsers") || "[]");
+  const holder = users.find(u => u.accountNo === foundCard.accountNumber);
+
+  document.getElementById("holderName").textContent = `${holder.firstName} ${holder.lastName}`;
+  document.getElementById("cardNumber").textContent = foundCard.cardNumber;
+  document.getElementById("expiry").textContent = foundCard.expiry;
+  document.getElementById("cvv").textContent = foundCard.cvv;
+
+  cardBox.classList.add("show");
+}
+</script>
+
+</body>
+</html>

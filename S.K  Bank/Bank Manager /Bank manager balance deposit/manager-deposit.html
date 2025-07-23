@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Deposit Money</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #e3f2fd;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      width: 400px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      color: #1565c0;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      background: #0d47a1;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .message {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Deposit Money</h2>
+  <input type="text" id="accountNo" placeholder="Enter Account Number">
+  <input type="number" id="amount" placeholder="Enter Amount to Deposit">
+  <button onclick="depositMoney()">Deposit</button>
+
+  <div class="message" id="msgBox"></div>
+</div>
+
+<script>
+  function depositMoney() {
+    const accNo = document.getElementById("accountNo").value.trim();
+    const amount = parseFloat(document.getElementById("amount").value);
+    const msgBox = document.getElementById("msgBox");
+
+    msgBox.textContent = "";
+    msgBox.className = "message";
+
+    if (!accNo || isNaN(amount) || amount <= 0) {
+      msgBox.textContent = "Enter valid account number and amount.";
+      msgBox.classList.add("error");
+      return;
+    }
+
+    let manager = JSON.parse(localStorage.getItem("managerAccount"));
+
+    if (!manager || manager.accountNo !== accNo) {
+      msgBox.textContent = "Account not found.";
+      msgBox.classList.add("error");
+      return;
+    }
+
+    // Deposit logic
+    manager.balance += amount;
+
+    manager.transactions = manager.transactions || [];
+    manager.transactions.push({
+      type: "Credit",
+      amount: amount,
+      date: new Date().toISOString(),
+      by: "Manager"
+    });
+
+    localStorage.setItem("managerAccount", JSON.stringify(manager));
+
+    msgBox.textContent = `₹${amount.toFixed(2)} deposited successfully to ${manager.fullName}'s account.`;
+    msgBox.classList.add("success");
+
+    document.getElementById("accountNo").value = "";
+    document.getElementById("amount").value = "";
+  }
+</script>
+
+</body>
+</html>

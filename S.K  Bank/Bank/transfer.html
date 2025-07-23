@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bank Balance Transfer (IFSC)</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #e0f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .box {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 500px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      color: #006064;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #006064;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      margin-top: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 6px;
+      display: none;
+    }
+
+    .success {
+      background: #e0f2f1;
+      color: green;
+      border: 1px solid #4db6ac;
+    }
+
+    .error {
+      background: #ffebee;
+      color: red;
+      border: 1px solid #ef5350;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Transfer Money (IFSC Secure)</h2>
+  <input type="text" id="senderAcc" placeholder="Sender Account Number">
+  <input type="text" id="senderIfsc" placeholder="Sender IFSC Code">
+  <input type="text" id="receiverAcc" placeholder="Receiver Account Number">
+  <input type="number" id="amount" placeholder="Amount to Transfer">
+  <button onclick="transfer()">Transfer</button>
+
+  <div class="result" id="messageBox"></div>
+</div>
+
+<script>
+  function transfer() {
+    const senderAcc = document.getElementById("senderAcc").value.trim();
+    const senderIfsc = document.getElementById("senderIfsc").value.trim();
+    const receiverAcc = document.getElementById("receiverAcc").value.trim();
+    const amount = parseFloat(document.getElementById("amount").value.trim());
+    const box = document.getElementById("messageBox");
+
+    box.style.display = "none";
+    box.className = "result";
+
+    if (!senderAcc || !senderIfsc || !receiverAcc || isNaN(amount) || amount <= 0) {
+      box.classList.add("error");
+      box.innerText = "Please enter all valid details.";
+      box.style.display = "block";
+      return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("bankUsers") || "[]");
+
+    const sender = users.find(u => u.accountNo === senderAcc && u.ifsc === senderIfsc);
+    const receiver = users.find(u => u.accountNo === receiverAcc);
+
+    if (!sender) {
+      box.classList.add("error");
+      box.innerText = "Invalid sender account or IFSC.";
+      box.style.display = "block";
+      return;
+    }
+
+    if (!receiver) {
+      box.classList.add("error");
+      box.innerText = "Receiver account not found.";
+      box.style.display = "block";
+      return;
+    }
+
+    if (sender.balance < amount) {
+      box.classList.add("error");
+      box.innerText = "Sender has insufficient balance.";
+      box.style.display = "block";
+      return;
+    }
+
+    // Deduct and transfer
+    sender.balance -= amount;
+    receiver.balance += amount;
+
+    const now = new Date().toISOString();
+
+    sender.transactions = sender.transactions || [];
+    receiver.transactions = receiver.transactions || [];
+
+    sender.transactions.push({
+      type: "Debit",
+      amount,
+      to: receiver.accountNo,
+      date: now
+    });
+
+    receiver.transactions.push({
+      type: "Credit",
+      amount,
+      from: sender.accountNo,
+      date: now
+    });
+
+    // Update localStorage
+    users = users.map(u => {
+      if (u.accountNo === sender.accountNo) return sender;
+      if (u.accountNo === receiver.accountNo) return receiver;
+      return u;
+    });
+
+    localStorage.setItem("bankUsers", JSON.stringify(users));
+
+    box.classList.add("success");
+    box.innerText = `₹${amount} transferred successfully from ${sender.accountNo} to ${receiver.accountNo}.`;
+    box.style.display = "block";
+  }
+</script>
+
+</body>
+</html>

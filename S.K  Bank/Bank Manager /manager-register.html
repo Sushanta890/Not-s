@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manager Registration</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #e0f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    form {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 400px;
+    }
+    h2 { text-align: center; }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #00796b;
+      color: white;
+      border: none;
+      margin-top: 15px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .success {
+      color: green;
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<form id="registerForm">
+  <h2>Bank Manager Registration</h2>
+  <input type="text" id="fullName" placeholder="Full Name" required>
+  <input type="date" id="dob" required>
+  <input type="tel" id="mobile" placeholder="Mobile Number" pattern="[0-9]{10}" required>
+  <input type="email" id="email" placeholder="Email ID" required>
+  <button type="submit">Register</button>
+  <div class="success" id="successMsg"></div>
+</form>
+
+<script>
+  function generate(prefix, length) {
+    let result = prefix;
+    while (result.length < length) {
+      result += Math.floor(Math.random() * 10);
+    }
+    return result;
+  }
+
+  document.getElementById("registerForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const manager = {
+      fullName: document.getElementById("fullName").value,
+      dob: document.getElementById("dob").value,
+      mobile: document.getElementById("mobile").value,
+      email: document.getElementById("email").value,
+      accountNo: generate("30", 14),
+      ifsc: "BANKM000001",
+      customerId: generate("MGR", 10),
+      balance: 0.0,
+      transactions: []
+    };
+
+    localStorage.setItem("managerAccount", JSON.stringify(manager));
+
+    document.getElementById("successMsg").textContent = "Registration Successful!";
+    setTimeout(() => {
+      window.location.href = "manager-login.html";
+    }, 2000);
+  });
+</script>
+
+</body>
+</html>

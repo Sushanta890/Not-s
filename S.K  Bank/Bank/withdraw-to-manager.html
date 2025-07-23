@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Withdraw to Manager Account</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #fff3e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .box {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 450px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      color: #ef6c00;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #ef6c00;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      margin-top: 15px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 6px;
+    }
+
+    .success { background: #e8f5e9; color: green; border: 1px solid #66bb6a; }
+    .error { background: #ffebee; color: red; border: 1px solid #ef5350; text-align: center; }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Withdraw to Manager Account</h2>
+  <input type="text" id="accountInput" placeholder="Enter Your Account Number">
+  <input type="number" id="amountInput" placeholder="Amount to Withdraw">
+  <button onclick="withdrawMoney()">Withdraw</button>
+
+  <div id="messageBox" class="result" style="display: none;"></div>
+</div>
+
+<script>
+  function withdrawMoney() {
+    const accNo = document.getElementById("accountInput").value.trim();
+    const amount = parseFloat(document.getElementById("amountInput").value.trim());
+    const messageBox = document.getElementById("messageBox");
+    messageBox.style.display = "none";
+    messageBox.className = "result";
+
+    if (!accNo || isNaN(amount) || amount <= 0) {
+      messageBox.classList.add("error");
+      messageBox.innerText = "Please enter valid account and amount.";
+      messageBox.style.display = "block";
+      return;
+    }
+
+    const users = JSON.parse(localStorage.getItem("bankUsers") || "[]");
+    const manager = JSON.parse(localStorage.getItem("managerAccount") || "{}");
+
+    const user = users.find(u => u.accountNo === accNo);
+
+    if (!user) {
+      messageBox.classList.add("error");
+      messageBox.innerText = "User account not found.";
+      messageBox.style.display = "block";
+      return;
+    }
+
+    if (!manager || !manager.accountNo) {
+      messageBox.classList.add("error");
+      messageBox.innerText = "Manager account not set up.";
+      messageBox.style.display = "block";
+      return;
+    }
+
+    if (user.balance < amount) {
+      messageBox.classList.add("error");
+      messageBox.innerText = "Insufficient balance.";
+      messageBox.style.display = "block";
+      return;
+    }
+
+    // Deduct from user
+    user.balance -= amount;
+    user.transactions = user.transactions || [];
+    user.transactions.push({
+      type: "Debit",
+      amount,
+      to: manager.accountNo,
+      date: new Date().toISOString()
+    });
+
+    // Add to manager
+    manager.balance = (manager.balance || 0) + amount;
+    manager.transactions = manager.transactions || [];
+    manager.transactions.push({
+      type: "Credit",
+      amount,
+      from: user.accountNo,
+      date: new Date().toISOString()
+    });
+
+    // Update localStorage
+    const updatedUsers = users.map(u => u.accountNo === accNo ? user : u);
+    localStorage.setItem("bankUsers", JSON.stringify(updatedUsers));
+    localStorage.setItem("managerAccount", JSON.stringify(manager));
+
+    messageBox.classList.add("success");
+    messageBox.innerText = `₹${amount} withdrawn from ${user.firstName}'s account and transferred to manager successfully.`;
+    messageBox.style.display = "block";
+  }
+</script>
+
+</body>
+</html>

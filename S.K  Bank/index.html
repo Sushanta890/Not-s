@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login/Register</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f4f4f4;
+    }
+
+    .container {
+      width: 300px;
+      padding: 25px;
+      background: #fff;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      border-radius: 10px;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #28a745;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .toggle {
+      text-align: center;
+      margin-top: 10px;
+      cursor: pointer;
+      color: #007bff;
+    }
+
+    .shake {
+      animation: shake 0.3s;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      50% { transform: translateX(10px); }
+      75% { transform: translateX(-5px); }
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" id="registerBox">
+  <h2>Register</h2>
+  <input type="text" id="regName" placeholder="Full Name" required>
+  <input type="email" id="regEmail" placeholder="Email ID" required>
+  <input type="password" id="regPassword" placeholder="Password" required>
+  <button onclick="register()">Register</button>
+  <div class="toggle" onclick="toggleForm()">Already have an account? Login</div>
+</div>
+
+<div class="container" id="loginBox" style="display: none;">
+  <h2>Login</h2>
+  <input type="email" id="loginEmail" placeholder="Email ID" required>
+  <input type="password" id="loginPassword" placeholder="Password" required>
+  <button onclick="login()">Login</button>
+  <div class="error" id="errorMsg"></div>
+  <div class="toggle" onclick="toggleForm()">Don't have an account? Register</div>
+</div>
+
+<script>
+  function toggleForm() {
+    const reg = document.getElementById('registerBox');
+    const log = document.getElementById('loginBox');
+    reg.style.display = reg.style.display === 'none' ? 'block' : 'none';
+    log.style.display = log.style.display === 'none' ? 'block' : 'none';
+    document.getElementById('errorMsg').textContent = '';
+  }
+
+  function register() {
+    const name = document.getElementById('regName').value;
+    const email = document.getElementById('regEmail').value;
+    const password = document.getElementById('regPassword').value;
+
+    if (name && email && password) {
+      const user = { name, email, password };
+      localStorage.setItem('user', JSON.stringify(user));
+      alert('Registered successfully!');
+      toggleForm();
+    } else {
+      alert('Please fill all fields!');
+    }
+  }
+
+  function login() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    const loginBox = document.getElementById('loginBox');
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+
+    if (storedUser && storedUser.email === email && storedUser.password === password) {
+      // Successful login
+      window.location.href = "Bank Home/home.html";
+    } else {
+      // Shake animation on error
+      loginBox.classList.add('shake');
+      document.getElementById('errorMsg').textContent = "Invalid email or password";
+      setTimeout(() => loginBox.classList.remove('shake'), 300);
+    }
+  }
+</script>
+
+</body>
+</html>

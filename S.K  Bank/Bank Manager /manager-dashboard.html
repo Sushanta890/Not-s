@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manager Dashboard</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #fffde7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      width: 450px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #33691e;
+    }
+    .info {
+      margin-top: 15px;
+      font-size: 16px;
+    }
+    .highlight {
+      font-weight: bold;
+      color: #2e7d32;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Bank Manager Account</h2>
+  <div id="dashboard"></div>
+</div>
+
+<script>
+  const loggedIn = sessionStorage.getItem("managerLoggedIn");
+  if (!loggedIn) {
+    window.location.href = "manager-login.html";
+  }
+
+  const manager = JSON.parse(localStorage.getItem("managerAccount"));
+  const dash = document.getElementById("dashboard");
+
+  if (manager) {
+    dash.innerHTML = `
+      <div class="info"><strong>Manager Name:</strong> <span class="highlight">${manager.fullName}</span></div>
+      <div class="info"><strong>Account Number:</strong> ${manager.accountNo}</div>
+      <div class="info"><strong>Customer ID:</strong> ${manager.customerId}</div>
+      <div class="info"><strong>Bank Balance:</strong> ₹${manager.balance.toFixed(2)}</div>
+    `;
+  } else {
+    dash.innerHTML = "No manager data found.";
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Banking Home Page</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(120deg, #a1c4fd, #c2e9fb);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 12px;
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.15);
+      animation: slideFade 0.6s ease;
+    }
+
+    @keyframes slideFade {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      color: #2e7d32;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      margin: 12px 0;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #43a047;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #388e3c;
+      transform: translateY(-3px);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .footer {
+      margin-top: 25px;
+      font-size: 13px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🏦 Welcome to S.K Bank</h1>
+
+  <button class="btn" onclick="goTo('check-balance.html')">Check Balance</button>
+  <button class="btn" onclick="goTo('register.html')">Register New Account</button>
+  <button class="btn" onclick="goTo('transfer.html')">Transfer Money</button>
+  <button class="btn" onclick="goTo('withdraw-to-manager.html')">Withdraw to Manager</button>
+  
+  <button class="btn" onclick="goTo('/Bank details/search-by-aadhar.html')">Account number search</button>
+  <button class="btn" onclick="goTo('/Bank details/bank-passbook.html')">Passbook show Enter Aadhar number</button>
+  
+  <button class="btn" onclick="goTo('/ATM/atm-home.html')">ATM CARD </button>
+  
+  <div class="footer">Powered by SK Bank</div>
+</div>
+
+<script>
+  function goTo(page) {
+    window.location.href = page;
+  }
+</script>
+
+</body>
+</html>
