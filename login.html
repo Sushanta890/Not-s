@@ -1,80 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Login</title>
+  <meta charset="UTF-8">
+  <title>Room Login</title>
   <style>
     body {
-      font-family: Arial;
-      background: #f2f2f2;
+      font-family: Arial, sans-serif;
+      background: #e3f2fd;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
 
-    .login-box {
-      background: white;
+    form {
+      background: #ffffff;
       padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px gray;
-      width: 300px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+      animation: slideFadeIn 0.6s ease-in-out;
     }
 
-    .login-box h2 {
+    h2 {
       text-align: center;
-      color: #004080;
       margin-bottom: 20px;
+      color: #1565c0;
     }
 
-    input {
+    input, button {
       width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border-radius: 5px;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 6px;
       border: 1px solid #ccc;
+      font-size: 16px;
     }
 
     button {
-      width: 100%;
-      padding: 10px;
-      background: #0073e6;
+      background: #1565c0;
       color: white;
-      border: none;
-      border-radius: 5px;
-      margin-top: 10px;
+      font-weight: bold;
       cursor: pointer;
+      transition: background 0.3s;
     }
 
     button:hover {
-      background: #005bb5;
+      background: #0d47a1;
+    }
+
+    @keyframes slideFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
 <body>
 
-<div class="login-box">
-  <h2>Login</h2>
-  <input type="email" id="email" placeholder="Email ID">
-  <input type="password" id="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-</div>
+  <form id="loginForm">
+    <h2>Room Account Login</h2>
+    <input type="text" id="accNum" placeholder="Enter Account Number" required />
+    <button type="submit">Login</button>
+  </form>
 
-<script>
-function login() {
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
-
-  const storedEmail = localStorage.getItem("userEmail");
-  const storedPassword = localStorage.getItem("userPass");
-
-  if (email === storedEmail && password === storedPassword) {
-    alert("Login successful!");
-    window.location.href = "home.html";
-  } else {
-    alert("Invalid email or password.");
-  }
-}
-</script>
-
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const accNum = document.getElementById("accNum").value.trim();
+      localStorage.setItem("loggedInRoomUser", accNum);
+      window.location.href = "room-dashboard.html";
+    });
+  </script>
 </body>
 </html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Show Purchases by Account</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #e3f2fd;
+      padding: 30px;
+    }
+
+    form {
+      max-width: 400px;
+      margin: auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background: #1565c0;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .purchase-list {
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .purchase-item {
+      background: #f1f8e9;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-left: 5px solid #558b2f;
+      border-radius: 6px;
+      animation: slideIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .error {
+      text-align: center;
+      color: red;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<form id="viewForm">
+  <h2>📜 View Purchase History</h2>
+  <input type="text" id="accNum" placeholder="Enter Account Number" required />
+  <button type="submit">Show Purchases</button>
+</form>
+
+<div id="purchaseOutput"></div>
+
+<script>
+  document.getElementById("viewForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const accNum = document.getElementById("accNum").value.trim();
+    const users = JSON.parse(localStorage.getItem("bankUsers") || "[]");
+    const user = users.find(u => u.accountNo === accNum);
+    const output = document.getElementById("purchaseOutput");
+
+    if (!user) {
+      output.innerHTML = `<p class="error">❌ Account not found</p>`;
+      return;
+    }
+
+    if (!user.transactions || user.transactions.length === 0) {
+      output.innerHTML = `<p class="error">🛒 No purchases found for this account.</p>`;
+      return;
+    }
+
+    let html = `<div class="purchase-list"><h3>🧾 Purchases for ${user.firstName} ${user.lastName}</h3>`;
+
+    user.transactions.forEach(t => {
+      html += `
+        <div class="purchase-item">
+          <strong>Item:</strong> ${t.item}<br>
+          <strong>KG/Gram:</strong> ${t.kg}<br>
+          <strong>Price:</strong> ₹${t.price}<br>
+          <strong>📅 Date & Time:</strong> ${t.date}
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+    output.innerHTML = html;
+  });
+</script>
+
+</body>
+</html>

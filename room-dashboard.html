@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Room Dashboard</title>
+  <style>
+    body { font-family: Arial; background: #f1f8e9; padding: 30px; }
+    .card, form {
+      background: white; padding: 20px; border-radius: 12px;
+      max-width: 600px; margin: 20px auto; box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      animation: fadeIn 0.5s ease;
+    }
+    input, button {
+      width: 100%; padding: 10px; margin: 10px 0;
+      border-radius: 6px; border: 1px solid #ccc;
+    }
+    button {
+      background: #388e3c; color: white; font-weight: bold;
+    }
+    .success {
+      background: #d0f8ce; color: #2e7d32; padding: 15px;
+      margin-top: 15px; border-radius: 10px;
+      animation: bounceIn 0.4s ease;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(30px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0.9); opacity: 0; }
+      60% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card" id="userInfo"></div>
+
+<form id="purchaseForm">
+  <h3>Room Purchase</h3>
+  <input type="text" id="item" placeholder="Item Name" required />
+  <input type="text" id="kg" placeholder="KG / Gram" required />
+  <input type="number" id="price" placeholder="Total ₹" required />
+  <button type="submit">Submit Purchase</button>
+</form>
+
+<div class="card" id="purchaseLog"></div>
+
+<script>
+  const accNum = localStorage.getItem("loggedInRoomUser");
+  const users = JSON.parse(localStorage.getItem("bankUsers") || "[]");
+  const manager = JSON.parse(localStorage.getItem("bankManager"));
+  const userIndex = users.findIndex(u => u.accountNo === accNum);
+
+  const user = users[userIndex];
+  const userInfo = document.getElementById("userInfo");
+
+  if (!user) {
+    userInfo.innerHTML = "<p style='color:red;'>Account not found.</p>";
+  } else {
+    userInfo.innerHTML = `
+      <h3>Welcome ${user.firstName} ${user.lastName}</h3>
+      <p><strong>Account:</strong> ${user.accountNo}</p>
+      <p><strong>Balance:</strong> ₹${user.balance}</p>
+    `;
+  }
+
+  document.getElementById("purchaseForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const item = document.getElementById("item").value;
+    const kg = document.getElementById("kg").value;
+    const price = parseFloat(document.getElementById("price").value);
+    const logDiv = document.getElementById("purchaseLog");
+
+    if (user.balance < price) {
+      logDiv.innerHTML = `<p style='color:red;'>❌ Insufficient balance.</p>`;
+      return;
+    }
+
+    user.balance -= price;
+    if (manager) manager.balance += price;
+
+    const entry = {
+      item, kg, price,
+      date: new Date().toLocaleString()
+    };
+
+    user.transactions.push(entry);
+
+    users[userIndex] = user;
+    localStorage.setItem("bankUsers", JSON.stringify(users));
+    if (manager) localStorage.setItem("bankManager", JSON.stringify(manager));
+
+    // Show log
+    logDiv.innerHTML = `
+      <div class="success">
+        ✅ Purchase saved and ₹${price} transferred to Manager<br/>
+        <strong>Item:</strong> ${item} | <strong>Weight:</strong> ${kg}<br/>
+        <strong>Time:</strong> ${entry.date}<br/>
+        <strong>Remaining Balance:</strong> ₹${user.balance}
+      </div>
+    `;
+
+    // Update userInfo balance
+    userInfo.querySelector("p:last-child").innerHTML = `<strong>Balance:</strong> ₹${user.balance}`;
+
+    this.reset();
+  });
+</script>
+
+</body>
+</html>

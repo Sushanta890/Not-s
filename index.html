@@ -1,38 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>S.K Sushanta Profile</title>
+  <meta charset="UTF-8" />
+  <title>SK Bank | Home</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
-      background: #eef2f3;
+      font-family: Arial, sans-serif;
+      background: #e3f2fd;
     }
 
-    /* Navigation Button */
-    .nav-btn {
+    .menu-btn {
       position: fixed;
       top: 20px;
       left: 20px;
-      background: #004080;
+      background: #0d47a1;
       color: white;
-      padding: 10px 20px;
       border: none;
-      border-radius: 8px;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
       cursor: pointer;
       z-index: 1001;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      animation: pulse 1.5s infinite;
     }
 
-    /* Sidebar Nav */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
     .sidebar {
       position: fixed;
       top: 0;
-      left: -260px;
+      left: -250px;
       width: 250px;
       height: 100%;
-      background: #003366;
+      background: #1565c0;
       color: white;
-      padding: 30px 20px;
+      padding: 40px 20px;
       transition: left 0.4s ease;
       z-index: 1000;
     }
@@ -42,163 +51,56 @@
     }
 
     .sidebar h2 {
-      color: #ffcc00;
-      text-align: center;
       margin-bottom: 30px;
     }
 
     .sidebar a {
       display: block;
+      margin: 15px 0;
       color: white;
       text-decoration: none;
-      background: #004d99;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 8px;
-      text-align: center;
-      transition: background 0.3s;
+      font-size: 18px;
+      transition: padding-left 0.2s;
     }
 
     .sidebar a:hover {
-      background: #0059b3;
+      padding-left: 10px;
+      color: #ffeb3b;
     }
 
-    /* Main Content */
     .content {
-      padding: 60px 20px 20px 20px;
+      padding: 100px 30px;
       text-align: center;
+      animation: fadeSlide 0.6s ease-in-out;
     }
 
-    .typing-text {
-      font-size: 24px;
-      color: green;
-      font-weight: bold;
-      height: 30px;
-      margin-bottom: 20px;
-    }
-
-    .images img {
-      width: 180px;
-      height: 120px;
-      margin: 10px;
-      border-radius: 10px;
-      cursor: pointer;
-      box-shadow: 0 0 8px rgba(0,0,0,0.2);
-      transition: transform 0.3s;
-    }
-
-    .images img:hover {
-      transform: scale(1.05);
-    }
-
-    .data-box {
-      display: none;
-      background: #e6f7ff;
-      margin-top: 20px;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-      animation: fadeIn 0.5s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(40px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.8);
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-    }
-
-    .modal img {
-      max-width: 90%;
-      border: 5px solid white;
-      border-radius: 10px;
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      font-size: 30px;
-      color: white;
-      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-<!-- Nav Button -->
-<button class="nav-btn" onclick="toggleSidebar()">☰ Menu</button>
+<!-- Touch Menu Button -->
+<button class="menu-btn" onclick="toggleMenu()">☰</button>
 
-<!-- Sidebar -->
+<!-- Side Menu -->
 <div class="sidebar" id="sidebar">
-  <h2>S.K Bank</h2>
-  <a href="register.html">📋 Register</a>
+  <h2>📂 Menu</h2>
   <a href="login.html">🔐 Login</a>
-  <a href="login.html"> Login</a>
+  <a href="view-purchases.html">🧾 View Purchases</a>
 </div>
 
-<!-- Main Content -->
+<!-- Page Content -->
 <div class="content">
-  <h1>Welcome to website</h1>
-  <div class="typing-text" id="typing"></div>
-
-  <div class="images">
-    <img src="IMG/Sushanta.jpg" onclick="showData(1, this.src)">
-    <img src="IMG/Naresh.png" onclick="showData(2, this.src)">
-    <img src="IMG/KK.png" onclick="showData(3, this.src)">
-  </div>
-
-  <div class="data-box" id="data1"><h3>Image 1</h3><p>S.K Sushanta.</p></div>
-  <div class="data-box" id="data2"><h3>Image 2</h3><p>Naresh Kumar.</p></div>
-  <div class="data-box" id="data3"><h3>Image 3</h3><p>KK.Kameshwar businessman</p></div>
-</div>
-
-<!-- Full Image Modal -->
-<div id="imageModal" class="modal" onclick="closeModal()">
-  <span class="close-btn" onclick="closeModal()">&times;</span>
-  <img id="fullImage" src="">
+  <h1>🏦 Welcome to SK Bank</h1>
+  <p>Click the ☰ button to get started.</p>
 </div>
 
 <script>
-  function toggleSidebar() {
+  function toggleMenu() {
     document.getElementById("sidebar").classList.toggle("open");
-  }
-
-  // Auto typing effect
-  const text = "ROOM MATE";
-  let i = 0;
-  function typeEffect() {
-    if (i < text.length) {
-      document.getElementById("typing").innerHTML += text.charAt(i);
-      i++;
-      setTimeout(typeEffect, 100);
-    }
-  }
-
-  window.onload = () => {
-    typeEffect();
-  };
-
-  function showData(n, src) {
-    document.querySelectorAll('.data-box').forEach(div => div.style.display = 'none');
-    document.getElementById('data' + n).style.display = 'block';
-    document.getElementById('fullImage').src = src;
-    document.getElementById('imageModal').style.display = 'flex';
-  }
-
-  function closeModal() {
-    document.getElementById('imageModal').style.display = 'none';
   }
 </script>
 
