@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bank Passbook with PDF Download</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    body {
+      font-family: Arial;
+      background: #e0f2f1;
+      display: flex;
+      justify-content: center;
+      align-items: start;
+      padding: 40px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 850px;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      animation: fadeIn 0.4s ease;
+    }
+
+    h2 {
+      text-align: center;
+      color: #004d40;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 49%;
+      padding: 12px;
+      margin-top: 5px;
+      background: #00695c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .download-btn {
+      background: #00796b;
+      float: right;
+    }
+
+    .grid {
+      display: flex;
+      margin-top: 30px;
+      gap: 30px;
+    }
+
+    .col {
+      flex: 1;
+      border: 1px solid #b2dfdb;
+      padding: 20px;
+      border-radius: 10px;
+      background: #e0f7fa;
+    }
+
+    .row {
+      margin-bottom: 10px;
+    }
+
+    .label {
+      font-weight: bold;
+      color: #00695c;
+    }
+
+    .value {
+      color: #333;
+    }
+
+    .signature {
+      margin-top: 30px;
+      font-style: italic;
+      color: #004d40;
+      font-weight: bold;
+      text-align: right;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .clearfix::after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Digital Bank Passbook</h2>
+  <input type="text" id="accInput" placeholder="Enter Account Number">
+  <div class="clearfix">
+    <button onclick="loadPassbook()">Load Passbook</button>
+    <button class="download-btn" onclick="downloadPDF()">Download PDF</button>
+  </div>
+  <div id="errorBox" class="error"></div>
+
+  <div class="grid" id="passbookView" style="display: none;">
+    <div class="col" id="leftCol"></div>
+    <div class="col" id="rightCol"></div>
+  </div>
+</div>
+
+<script>
+  function loadPassbook() {
+    const acc = document.getElementById("accInput").value.trim();
+    const errorBox = document.getElementById("errorBox");
+    const passbookView = document.getElementById("passbookView");
+    const leftCol = document.getElementById("leftCol");
+    const rightCol = document.getElementById("rightCol");
+
+    errorBox.textContent = "";
+    passbookView.style.display = "none";
+
+    const users = JSON.parse(localStorage.getItem("bankUsers") || "[]");
+    const user = users.find(u => u.accountNo === acc);
+
+    if (!user) {
+      errorBox.textContent = "Account not found.";
+      return;
+    }
+
+    // Left Side
+    leftCol.innerHTML = `
+      <div class="row"><span class="label">CIF No:</span> <span class="value">${user.cifNo || "N/A"}</span></div>
+      <div class="row"><span class="label">Account No:</span> <span class="value">${user.accountNo}</span></div>
+      <div class="row"><span class="label">Holder Name:</span> <span class="value">${user.firstName} ${user.lastName}</span></div>
+      <div class="row"><span class="label">Phone:</span> <span class="value">${user.mobile || "N/A"}</span></div>
+      <div class="row"><span class="label">Email:</span> <span class="value">${user.email || "N/A"}</span></div>
+      <div class="row"><span class="label">DOB (if minor):</span> <span class="value">${user.dob || "N/A"}</span></div>
+      <div class="row"><span class="label">MOP:</span> <span class="value">${user.mop || "Single"}</span></div>
+      <div class="row"><span class="label">Nominee Reg No:</span> <span class="value">${user.nomineeReg || "N/A"}</span></div>
+    `;
+
+    // Right Side
+    rightCol.innerHTML = `
+      <div class="row"><span class="label">Branch Phone:</span> <span class="value">${user.branchPhone || "1800-000-999"}</span></div>
+      <div class="row"><span class="label">Branch Email:</span> <span class="value">${user.branchEmail || "branch@bank.com"}</span></div>
+      <div class="row"><span class="label">Branch Code:</span> <span class="value">${user.branchCode || "BR001"}</span></div>
+      <div class="row"><span class="label">Date of Issue:</span> <span class="value">${user.dateOfIssue || "2025-07-11"}</span></div>
+      <div class="row"><span class="label">IFSC:</span> <span class="value">${user.ifsc || "BANK0001"}</span></div>
+      <div class="row"><span class="label">MICR / FiRst:</span> <span class="value">${user.micr || "MICR123456"}</span></div>
+      <div class="signature">Branch Manager Signature:<br>S.K SUSHANTA</div>
+    `;
+
+    passbookView.style.display = "flex";
+  }
+
+  function downloadPDF() {
+    const passbook = document.querySelector(".grid");
+    if (!passbook || passbook.style.display === "none") {
+      alert("Please load a passbook first.");
+      return;
+    }
+
+    const opt = {
+      margin:       0.3,
+      filename:     'Bank-Passbook.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+    };
+
+    html2pdf().set(opt).from(passbook).save();
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Activate ATM Card</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #fceabb, #f8b500);
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 420px;
+      animation: slideFade 0.4s ease;
+      text-align: center;
+    }
+
+    @keyframes slideFade {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #d84315;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      background: #e65100;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      background: #bf360c;
+    }
+
+    .success {
+      margin-top: 20px;
+      background: #f1f8e9;
+      padding: 15px;
+      border-radius: 10px;
+      color: #2e7d32;
+      font-weight: bold;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🟢 Activate ATM Card</h2>
+
+  <input type="text" id="cardNumber" placeholder="ATM Card Number" maxlength="16">
+  <input type="text" id="expiry" placeholder="Expiry Date (MM/YY)" maxlength="5">
+  <input type="text" id="cvv" placeholder="CVV" maxlength="3">
+  <input type="password" id="pin" placeholder="Set 4-digit PIN" maxlength="4">
+
+  <button onclick="activateCard()">Activate</button>
+
+  <div id="successBox" class="success" style="display:none;"></div>
+  <div id="errorBox" class="error"></div>
+</div>
+
+<script>
+  function activateCard() {
+    const cardNumber = document.getElementById("cardNumber").value.trim();
+    const expiry = document.getElementById("expiry").value.trim();
+    const cvv = document.getElementById("cvv").value.trim();
+    const pin = document.getElementById("pin").value.trim();
+    const errorBox = document.getElementById("errorBox");
+    const successBox = document.getElementById("successBox");
+
+    errorBox.textContent = "";
+    successBox.style.display = "none";
+
+    if (
+      cardNumber.length !== 16 ||
+      expiry.length !== 5 ||
+      cvv.length !== 3 ||
+      pin.length !== 4 ||
+      isNaN(cardNumber + cvv + pin)
+    ) {
+      errorBox.textContent = "Please enter valid card details and PIN.";
+      return;
+    }
+
+    // Search for card in localStorage
+    let cardFound = false;
+    for (let key of Object.keys(localStorage)) {
+      if (key.startsWith("atmCard_")) {
+        const card = JSON.parse(localStorage.getItem(key));
+        if (
+          card.cardNumber === cardNumber &&
+          card.expiry === expiry &&
+          card.cvv == cvv
+        ) {
+          // Update the card with PIN
+          card.pin = pin;
+          localStorage.setItem(key, JSON.stringify(card));
+          successBox.style.display = "block";
+          successBox.innerHTML = `✅ ATM Card Activated<br>Linked to A/C: <b>${card.accountNumber}</b>`;
+          cardFound = true;
+          break;
+        }
+      }
+    }
+
+    if (!cardFound) {
+      errorBox.textContent = "Card not found or details incorrect.";
+    }
+  }
+</script>
+
+</body>
+</html>

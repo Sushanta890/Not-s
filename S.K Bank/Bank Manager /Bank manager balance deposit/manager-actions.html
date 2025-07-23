@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manager Action Panel</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #fbd786, #f7797d);
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 40px 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.15);
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      animation: fadeSlideIn 0.5s ease;
+    }
+
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      color: #d84315;
+      margin-bottom: 25px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin: 12px 0;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      background: #ef6c00;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #e65100;
+      transform: translateY(-3px);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 13px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Manager Action Panel</h1>
+
+  <button class="btn" onclick="goTo('manager-check-balance.html')">💰 Check Balance</button>
+  <button class="btn" onclick="goTo('manager-deposit.html')">💵 Deposit Money</button>
+  <button class="btn" onclick="goTo('manager-transfer-money.html')">🔁 Transfer to Customer</button>
+
+  <div class="footer">SK Bank | Manager Tools</div>
+</div>
+
+<script>
+  function goTo(page) {
+    window.location.href = page;
+  }
+</script>
+
+</body>
+</html>

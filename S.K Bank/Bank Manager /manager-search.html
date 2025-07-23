@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Manager by Mobile</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f1f8e9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      width: 400px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #33691e;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #689f38;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      background: #f9fbe7;
+      padding: 15px;
+      border-radius: 6px;
+      border: 1px solid #cddc39;
+      font-size: 15px;
+    }
+
+    .error {
+      margin-top: 10px;
+      color: red;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Search Manager by Mobile</h2>
+  <input type="text" id="mobileInput" placeholder="Enter Mobile Number">
+  <button onclick="searchManager()">Search</button>
+  <div id="resultBox" class="result" style="display: none;"></div>
+  <div id="errorBox" class="error"></div>
+</div>
+
+<script>
+  function searchManager() {
+    const mobile = document.getElementById("mobileInput").value.trim();
+    const resultBox = document.getElementById("resultBox");
+    const errorBox = document.getElementById("errorBox");
+
+    resultBox.style.display = "none";
+    errorBox.textContent = "";
+
+    if (!mobile.match(/^\d{10}$/)) {
+      errorBox.textContent = "Enter a valid 10-digit mobile number.";
+      return;
+    }
+
+    const manager = JSON.parse(localStorage.getItem("managerAccount"));
+
+    if (manager && manager.mobile === mobile) {
+      resultBox.innerHTML = `
+        <strong>Holder Name:</strong> ${manager.fullName}<br>
+        <strong>Account Number:</strong> ${manager.accountNo}<br>
+        <strong>Customer ID:</strong> ${manager.customerId}<br>
+        <strong>IFSC Code:</strong> ${manager.ifsc}
+      `;
+      resultBox.style.display = "block";
+    } else {
+      errorBox.textContent = "Manager not found for this mobile number.";
+    }
+  }
+</script>
+
+</body>
+</html>

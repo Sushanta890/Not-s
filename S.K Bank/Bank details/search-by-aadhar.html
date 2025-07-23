@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search by Aadhar Card</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #fff8e1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      width: 400px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #f9a825;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #fbc02d;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      background: #fffde7;
+      padding: 15px;
+      border-radius: 6px;
+      border: 1px solid #fdd835;
+    }
+
+    .error {
+      margin-top: 10px;
+      color: red;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Find Account by Aadhar</h2>
+  <input type="text" id="aadharInput" placeholder="Enter Aadhar Number" maxlength="12">
+  <button onclick="searchAccount()">Search</button>
+  <div class="result" id="resultBox" style="display: none;"></div>
+  <div class="error" id="errorBox"></div>
+</div>
+
+<script>
+  function searchAccount() {
+    const aadhar = document.getElementById("aadharInput").value.trim();
+    const resultBox = document.getElementById("resultBox");
+    const errorBox = document.getElementById("errorBox");
+
+    resultBox.style.display = "none";
+    errorBox.textContent = "";
+
+    if (!aadhar.match(/^\d{12}$/)) {
+      errorBox.textContent = "Please enter a valid 12-digit Aadhar number.";
+      return;
+    }
+
+    const users = JSON.parse(localStorage.getItem("bankUsers") || "[]");
+
+    const user = users.find(u => u.aadhar === aadhar);
+
+    if (user) {
+      resultBox.innerHTML = `
+        <strong>Account Holder:</strong> ${user.firstName} ${user.lastName}<br>
+        <strong>Account Number:</strong> ${user.accountNo}<br>
+        <strong>Customer ID:</strong> ${user.customerId}
+      `;
+      resultBox.style.display = "block";
+    } else {
+      errorBox.textContent = "No account found for this Aadhar number.";
+    }
+  }
+</script>
+
+</body>
+</html>

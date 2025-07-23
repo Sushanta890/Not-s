@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ATM Balance Check</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #fdfcfb, #e2d1c3);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      color: #6a1b9a;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #7b1fa2;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    button:hover {
+      background: #4a148c;
+      transform: translateY(-2px);
+    }
+
+    .result {
+      margin-top: 20px;
+      background: #f3e5f5;
+      padding: 15px;
+      border-radius: 10px;
+      color: #4a148c;
+      font-weight: bold;
+    }
+
+    .error {
+      color: red;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>💳 ATM Balance Check</h2>
+
+  <input type="password" id="pinInput" placeholder="Enter 4-digit ATM PIN" maxlength="4">
+  <button onclick="checkBalance()">Check Balance</button>
+
+  <div id="resultBox" class="result" style="display: none;"></div>
+  <div id="errorBox" class="error"></div>
+</div>
+
+<script>
+  function checkBalance() {
+    const pin = document.getElementById("pinInput").value.trim();
+    const resultBox = document.getElementById("resultBox");
+    const errorBox = document.getElementById("errorBox");
+
+    resultBox.style.display = "none";
+    errorBox.textContent = "";
+
+    if (pin.length !== 4 || isNaN(pin)) {
+      errorBox.textContent = "Please enter a valid 4-digit PIN.";
+      return;
+    }
+
+    let matched = false;
+
+    for (const key of Object.keys(localStorage)) {
+      if (key.startsWith("atmCard_")) {
+        const card = JSON.parse(localStorage.getItem(key));
+        if (card.pin === pin) {
+          const bankUsers = JSON.parse(localStorage.getItem("bankUsers") || "[]");
+          const user = bankUsers.find(u => u.accountNo === card.accountNumber);
+
+          if (user) {
+            resultBox.innerHTML = `
+              A/C Number: <b>${card.accountNumber}</b><br>
+              Balance: <b>₹${user.balance}</b>
+            `;
+          } else {
+            resultBox.innerHTML = `
+              A/C Number: <b>${card.accountNumber}</b><br>
+              Balance: <b>Not found</b>
+            `;
+          }
+
+          resultBox.style.display = "block";
+          matched = true;
+          break;
+        }
+      }
+    }
+
+    if (!matched) {
+      errorBox.textContent = "ATM card not found or incorrect PIN.";
+    }
+  }
+</script>
+
+</body>
+</html>

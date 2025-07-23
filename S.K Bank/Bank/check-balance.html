@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bank Balance & Transaction History</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e0f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .box {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 500px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      color: #00796b;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #00796b;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .result {
+      margin-top: 20px;
+      background: #e0f2f1;
+      padding: 15px;
+      border-radius: 6px;
+      border: 1px solid #80cbc4;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    ul {
+      margin-top: 10px;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    .credit { color: green; }
+    .debit { color: red; }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Check Bank Account Balance</h2>
+  <input type="text" id="accountInput" placeholder="Enter Account Number">
+  <button onclick="checkBalance()">Check Balance</button>
+
+  <div class="result" id="resultBox" style="display: none;"></div>
+  <div class="error" id="errorBox"></div>
+</div>
+
+<script>
+  function formatDateTime(isoDate) {
+    const date = new Date(isoDate);
+    return date.toLocaleString();
+  }
+
+  function checkBalance() {
+    const accountNo = document.getElementById("accountInput").value.trim();
+    const resultBox = document.getElementById("resultBox");
+    const errorBox = document.getElementById("errorBox");
+
+    resultBox.style.display = "none";
+    errorBox.textContent = "";
+
+    if (!accountNo) {
+      errorBox.textContent = "Please enter an account number.";
+      return;
+    }
+
+    const users = JSON.parse(localStorage.getItem("bankUsers") || "[]");
+    const user = users.find(u => u.accountNo === accountNo);
+
+    if (user) {
+      const balance = user.balance?.toFixed(2) || "0.00";
+      const txs = user.transactions || [];
+
+      const history = txs.length > 0
+        ? txs.map(tx => `
+          <li class="${tx.type.toLowerCase()}">
+            ₹${tx.amount} - ${tx.type} on ${formatDateTime(tx.date)}
+          </li>
+        `).join("")
+        : "<li>No transactions found.</li>";
+
+      resultBox.innerHTML = `
+        <strong>Holder Name:</strong> ${user.firstName} ${user.lastName}<br>
+        <strong>Account Number:</strong> ${user.accountNo}<br>
+        <strong>Bank Balance:</strong> ₹${balance}<br><br>
+        <strong>Transaction History:</strong>
+        <ul>${history}</ul>
+      `;
+      resultBox.style.display = "block";
+    } else {
+      errorBox.textContent = "Account not found.";
+    }
+  }
+</script>
+
+</body>
+</html>

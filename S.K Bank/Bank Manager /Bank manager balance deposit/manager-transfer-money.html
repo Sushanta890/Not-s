@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bank Manager Transfer</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f3e5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .box {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 460px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      color: #6a1b9a;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #6a1b9a;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      margin-top: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 6px;
+      display: none;
+    }
+
+    .success {
+      background: #e8f5e9;
+      color: green;
+      border: 1px solid #66bb6a;
+    }
+
+    .error {
+      background: #ffebee;
+      color: red;
+      border: 1px solid #ef5350;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Manager Transfer to Customer</h2>
+  <input type="text" id="receiverAcc" placeholder="Receiver Account Number">
+  <input type="number" id="amount" placeholder="Amount to Transfer">
+  <button onclick="managerTransfer()">Transfer</button>
+
+  <div class="result" id="messageBox"></div>
+</div>
+
+<script>
+  function managerTransfer() {
+    const receiverAcc = document.getElementById("receiverAcc").value.trim();
+    const amount = parseFloat(document.getElementById("amount").value.trim());
+    const box = document.getElementById("messageBox");
+
+    box.style.display = "none";
+    box.className = "result";
+
+    if (!receiverAcc || isNaN(amount) || amount <= 0) {
+      box.classList.add("error");
+      box.innerText = "Please enter valid receiver account and amount.";
+      box.style.display = "block";
+      return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("bankUsers") || "[]");
+    let manager = JSON.parse(localStorage.getItem("managerAccount") || "{}");
+
+    if (!manager.accountNo) {
+      box.classList.add("error");
+      box.innerText = "Manager account not found.";
+      box.style.display = "block";
+      return;
+    }
+
+    const receiver = users.find(u => u.accountNo === receiverAcc);
+    if (!receiver) {
+      box.classList.add("error");
+      box.innerText = "Receiver account not found.";
+      box.style.display = "block";
+      return;
+    }
+
+    if (manager.balance < amount) {
+      box.classList.add("error");
+      box.innerText = "Insufficient balance in manager account.";
+      box.style.display = "block";
+      return;
+    }
+
+    // Perform transfer
+    manager.balance -= amount;
+    receiver.balance = (receiver.balance || 0) + amount;
+
+    const now = new Date().toISOString();
+
+    manager.transactions = manager.transactions || [];
+    receiver.transactions = receiver.transactions || [];
+
+    manager.transactions.push({
+      type: "Debit",
+      amount,
+      to: receiver.accountNo,
+      date: now
+    });
+
+    receiver.transactions.push({
+      type: "Credit",
+      amount,
+      from: manager.accountNo,
+      date: now
+    });
+
+    // Save updates
+    const updatedUsers = users.map(u => u.accountNo === receiverAcc ? receiver : u);
+    localStorage.setItem("bankUsers", JSON.stringify(updatedUsers));
+    localStorage.setItem("managerAccount", JSON.stringify(manager));
+
+    box.classList.add("success");
+    box.innerText = `₹${amount} transferred successfully to ${receiver.firstName} (${receiver.accountNo}).`;
+    box.style.display = "block";
+  }
+</script>
+
+</body>
+</html>
