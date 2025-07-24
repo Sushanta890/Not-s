@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pay Electrical Bill</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #fff3e0;
+      padding: 30px;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      color: #e65100;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #ff6f00;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .log {
+      margin-top: 20px;
+      padding: 12px;
+      background: #fff8e1;
+      border-radius: 8px;
+    }
+
+    .entry {
+      padding: 6px;
+      margin-bottom: 8px;
+      border-left: 4px solid #ff9800;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>⚡ Electrical Bill Payment</h2>
+  <input type="text" id="accInput" placeholder="Enter Your Account Number" required>
+  <input type="number" id="amountInput" placeholder="Enter Bill Amount (₹)" required>
+  <button onclick="payElectricBill()">Pay Bill</button>
+  <div class="log" id="logArea"></div>
+</div>
+
+<script>
+  function payElectricBill() {
+    const accNo = document.getElementById("accInput").value.trim();
+    const amount = parseFloat(document.getElementById("amountInput").value);
+    const users = JSON.parse(localStorage.getItem("bankUsers") || "[]");
+
+    const user = users.find(u => u.accountNo === accNo);
+    const manager = JSON.parse(localStorage.getItem("bankManager"));
+
+    const logArea = document.getElementById("logArea");
+    logArea.innerHTML = "";
+
+    if (!user) {
+      logArea.innerHTML = "<p style='color:red;'>❌ Account not found.</p>";
+      return;
+    }
+
+    if (isNaN(amount) || amount <= 0) {
+      logArea.innerHTML = "<p style='color:red;'>❗ Enter a valid amount.</p>";
+      return;
+    }
+
+    if (user.balance < amount) {
+      logArea.innerHTML = "<p style='color:red;'>❌ Insufficient balance.</p>";
+      return;
+    }
+
+    const now = new Date();
+    const time = now.toLocaleString();
+
+    // Deduct from user
+    user.balance -= amount;
+    user.transactions.push({ item: "Electrical Bill", price: amount, date: time });
+
+    // Credit to manager
+    if (manager) {
+      manager.balance += amount;
+      localStorage.setItem("bankManager", JSON.stringify(manager));
+    }
+
+    // Save user
+    const updatedUsers = users.map(u => u.accountNo === accNo ? user : u);
+    localStorage.setItem("bankUsers", JSON.stringify(updatedUsers));
+
+    // Show success
+    const entry = document.createElement("div");
+    entry.className = "entry";
+    entry.textContent = `✅ Paid ₹${amount} on ${time}`;
+    logArea.appendChild(entry);
+
+    const total = user.transactions
+      .filter(t => t.item === "Electrical Bill")
+      .reduce((sum, t) => sum + t.price, 0);
+
+    const summary = document.createElement("p");
+    summary.innerHTML = `<b>💰 Total Electrical Bill Paid: ₹${total}</b>`;
+    logArea.appendChild(summary);
+  }
+</script>
+
+</body>
+</html>

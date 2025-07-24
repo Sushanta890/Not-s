@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login Bank Account</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #e3f2fd;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    form {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      animation: slideIn 0.6s ease;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #0d47a1;
+      color: white;
+      font-weight: bold;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <form id="loginForm">
+    <h2>Room Rent Login Bank Account</h2>
+    <input type="text" id="loginAccount" placeholder="Enter Account Number" required>
+    <button type="submit">Login</button>
+  </form>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const accNum = document.getElementById("loginAccount").value.trim();
+      localStorage.setItem("loggedInUser", accNum);
+      window.location.href = "rent-room.html";
+    });
+  </script>
+</body>
+</html>

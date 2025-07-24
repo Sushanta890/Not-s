@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Room Rent Payment</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f1f8e9;
+      padding: 30px;
+    }
+    .box {
+      background: #fff;
+      max-width: 500px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      animation: fadeSlide 0.5s ease-in-out;
+    }
+    h2 {
+      color: #33691e;
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #33691e;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .log {
+      margin-top: 20px;
+      background: #f9fbe7;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Submit Room Rent</h2>
+    <p id="userInfo"></p>
+    <form id="rentForm">
+      <input type="number" id="rentAmount" placeholder="Enter Rent ₹" required>
+      <button type="submit">Pay Rent</button>
+    </form>
+    <div class="log" id="rentLog"></div>
+  </div>
+
+  <script>
+    const accountNo = localStorage.getItem("loggedInUser");
+    const users = JSON.parse(localStorage.getItem("bankUsers") || "[]");
+    const user = users.find(u => u.accountNo === accountNo);
+    const manager = users.find(u => u.accountNo.startsWith("BM")); // Bank Manager
+
+    document.getElementById("userInfo").textContent =
+      user ? `Welcome ${user.firstName} ${user.lastName} (₹${user.balance} available)` : "User not found.";
+
+    document.getElementById("rentForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const rent = parseFloat(document.getElementById("rentAmount").value);
+      const now = new Date().toLocaleString();
+
+      if (!user || user.balance < rent) {
+        alert("Insufficient balance or user not found.");
+        return;
+      }
+
+      // Deduct from user
+      user.balance -= rent;
+      user.transactions.push({ item: "Room Rent", price: rent, date: now });
+
+      // Credit to manager
+      if (manager) {
+        manager.balance += rent;
+      }
+
+      // Save all
+      localStorage.setItem("bankUsers", JSON.stringify(users));
+
+      // Update UI
+      document.getElementById("rentLog").innerHTML +=
+        `✅ ₹${rent} paid on ${now}<br>`;
+
+      document.getElementById("userInfo").textContent =
+        `Thank you ${user.firstName}. New Balance: ₹${user.balance}`;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Room Rent History</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f1f8e9;
+      padding: 30px;
+    }
+
+    .container {
+      background: white;
+      max-width: 600px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      animation: fadeSlide 0.5s ease;
+    }
+
+    h2 {
+      text-align: center;
+      color: #33691e;
+      margin-bottom: 20px;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #33691e;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .log {
+      margin-top: 20px;
+      background: #f9fbe7;
+      padding: 15px;
+      border-radius: 8px;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    .log-entry {
+      padding: 8px;
+      margin-bottom: 8px;
+      background: #e8f5e9;
+      border-left: 5px solid #66bb6a;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🔍 View Room Rent History</h2>
+  <input type="text" id="accInput" placeholder="Enter Account Number">
+  <button onclick="showRentHistory()">View Rent History</button>
+  <div class="log" id="output"></div>
+</div>
+
+<script>
+  function showRentHistory() {
+    const accNo = document.getElementById("accInput").value.trim();
+    const users = JSON.parse(localStorage.getItem("bankUsers") || "[]");
+    const user = users.find(u => u.accountNo === accNo);
+
+    const output = document.getElementById("output");
+    output.innerHTML = "";
+
+    if (!user) {
+      output.innerHTML = "<p style='color:red'>❌ Account not found.</p>";
+      return;
+    }
+
+    const rentEntries = user.transactions.filter(t => t.item === "Room Rent");
+
+    if (rentEntries.length === 0) {
+      output.innerHTML = "<p>No rent transactions found.</p>";
+      return;
+    }
+
+    let total = 0;
+    rentEntries.forEach(entry => {
+      total += entry.price;
+      const div = document.createElement("div");
+      div.className = "log-entry";
+      div.innerHTML = `🧾 ₹${entry.price} on ${entry.date}`;
+      output.appendChild(div);
+    });
+
+    const summary = document.createElement("p");
+    summary.style.fontWeight = "bold";
+    summary.style.marginTop = "10px";
+    summary.innerText = `🧮 Total Rent Paid: ₹${total}`;
+    output.appendChild(summary);
+  }
+</script>
+
+</body>
+</html>
