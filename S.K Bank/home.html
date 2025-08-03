@@ -7,12 +7,20 @@
     body {
       margin: 0;
       padding: 0;
-      background: linear-gradient(to right, #e3f2fd, #b2ebf2);
+      background: linear-gradient(-45deg, #e3f2fd, #b2ebf2, #80deea, #b2ebf2);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
       font-family: 'Segoe UI', sans-serif;
       height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .container {
@@ -52,15 +60,16 @@
       font-weight: bold;
       border: none;
       border-radius: 10px;
-      background: #00897b;
+      background: linear-gradient(to right, #00bfa5, #1de9b6);
       color: white;
       cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease;
+      transition: background 0.4s ease, transform 0.2s ease;
+      text-decoration: none;
     }
 
     .btn:hover {
-      background: #00695c;
-      transform: translateY(-3px);
+      background: linear-gradient(to left, #00796b, #004d40);
+      transform: scale(1.03);
     }
 
     .footer {
@@ -75,17 +84,11 @@
   <div class="container">
     <h1>🏦 Welcome to SK Bank Portal</h1>
 
-    <button class="btn" onclick="navigateTo('Bank//home.html')">👤 Bank Customer Home</button>
-    <a href="https://sushanta890.github.io/Atm/"> Wikipedia </a>
+    <a class="btn" href="https://sushanta890.github.io/Bank/" target="_blank"> Open Zero Balance Account</a>
+    <a class="btn" href="https://sushanta890.github.io/Atm/" target="_blank">🏧 ATM Active</a>
 
     <div class="footer">© 2025 SK Bank — Secure & Simple</div>
   </div>
-
-  <script>
-    function navigateTo(path) {
-      window.location.href = path;
-    }
-  </script>
 
 </body>
 </html>
