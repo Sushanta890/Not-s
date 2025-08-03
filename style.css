@@ -1,0 +1,105 @@
+/* Body with animated gradient background */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  animation: animated-bg 10s ease infinite;
+  background-size: 400% 400%;
+  overflow-x: hidden;
+}
+
+/* Keyframes for animated gradient background */
+@keyframes animated-bg {
+  0% {
+    background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+  }
+  25% {
+    background: linear-gradient(45deg, #a18cd1, #fbc2eb);
+  }
+  50% {
+    background: linear-gradient(45deg, #f6d365, #fda085);
+  }
+  75% {
+    background: linear-gradient(45deg, #84fab0, #8fd3f4);
+  }
+  100% {
+    background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+  }
+}
+
+/* Navigation bar styling */
+.nav-bar {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.nav-bar ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-bar ul li {
+  margin: 0 20px;
+}
+
+.nav-bar ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.nav-bar ul li a:hover {
+  color: #ffeb3b;
+}
+
+/* Footer styling */
+
+footer {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 30px;
+  margin-top: 1600px;
+}
+
+.footer-body {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.footer-body div {
+  margin: 10px;
+}
+
+.footer-body ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-body ul li {
+  margin: 5px 0;
+}
+
+.footer-body ul li a {
+  color: #b3e5fc;
+  text-decoration: none;
+}
+
+.footer-body ul li a:hover {
+  text-decoration: underline;
+}
+
+footer p {
+  margin: 0 0 10px;
+}
+
+.footer-copyright {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 9px;
+  color: #ccc;
+}

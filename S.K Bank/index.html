@@ -10,7 +10,18 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background: #f4f4f4;
+      animation: bgChange 60s infinite linear;
+      background-size: 400% 400%;
+      transition: background 1s;
+    }
+
+    @keyframes bgChange {
+      0%   { background: #ff9a9e; }
+      20%  { background: #fad0c4; }
+      40%  { background: #a1c4fd; }
+      60%  { background: #c2e9fb; }
+      80%  { background: #d4fc79; }
+      100% { background: #96e6a1; }
     }
 
     .container {

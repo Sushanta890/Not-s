@@ -1,114 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SK Bank | Home</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #e3f2fd;
-    }
-
-    .menu-btn {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background: #0d47a1;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      font-size: 24px;
-      cursor: pointer;
-      z-index: 1001;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: -250px;
-      width: 250px;
-      height: 100%;
-      background: #1565c0;
-      color: white;
-      padding: 40px 20px;
-      transition: left 0.4s ease;
-      z-index: 1000;
-    }
-
-    .sidebar.open {
-      left: 0;
-    }
-
-    .sidebar h2 {
-      margin-bottom: 30px;
-    }
-
-    .sidebar a {
-      display: block;
-      margin: 15px 0;
-      color: white;
-      text-decoration: none;
-      font-size: 18px;
-      transition: padding-left 0.2s;
-    }
-
-    .sidebar a:hover {
-      padding-left: 10px;
-      color: #ffeb3b;
-    }
-
-    .content {
-      padding: 100px 30px;
-      text-align: center;
-      animation: fadeSlide 0.6s ease-in-out;
-    }
-
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="nav-bar">
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="S.K Bank/index.html">Manager</a></li>
+      <li><a href="#">Articles</a></li>
+      <li><a href="#">Gallery</a></li>
+    </ul>
+  </div>
+  
+  
+  <main></main>
 
-<!-- Touch Menu Button -->
-<button class="menu-btn" onclick="toggleMenu()">☰</button>
+  <footer>
+    <div class="footer-body">
+      <div>Your Brand Here.</div>
+      <div>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Terms & Conditions</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      © Copyright goes here.
+    </div>
+  </footer>
 
-<!-- Side Menu -->
-<div class="sidebar" id="sidebar">
-  <h2>📂 Menu</h2>
-  <a href="all-bills.html">All Bill 💸 Show</a>
-  <a href="view-purchases.html">🧾 View Purchases</a>
-  <a href="S.K Bank/index.html">🏦 S.K Bank</a>
-  <a href="Database/index.html">Data</a>
-</div>
-
-<!-- Page Content -->
-<div class="content">
-  <h1>🏦 Welcome to SK Bank</h1>
-  <p>Click the ☰ button to get started.</p>
-  <a href="login.html">Purchase</a><br>
-  <a href="electrical bill/electrical-bill.html">Electrical bill</a><br>
-  <a href="Gas/gas-bill.html">Gas Bill</a><br>
-  <a href="room/login.html"> Room rent</a>
-</div>
-
-<script>
-  function toggleMenu() {
-    document.getElementById("sidebar").classList.toggle("open");
-  }
-</script>
-
+  <script src="main.js"></script>
 </body>
 </html>
