@@ -1,173 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SK Bank | Home</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      animation: bgColorChange 30s infinite alternate;
-      transition: background 2s ease-in-out;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SK Bank | Home</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      animation: bgColorChange 30s infinite alternate;
+      transition: background 2s ease-in-out;
+    }
 
-    @keyframes bgColorChange {
-      0% { background-color: #e3f2fd; }
-      25% { background-color: #bbdefb; }
-      50% { background-color: #d1c4e9; }
-      75% { background-color: #c8e6c9; }
-      100% { background-color: #ffe0b2; }
-    }
+    @keyframes bgColorChange {
+      0% { background-color: #e3f2fd; }
+      25% { background-color: #bbdefb; }
+      50% { background-color: #d1c4e9; }
+      75% { background-color: #c8e6c9; }
+      100% { background-color: #ffe0b2; }
+    }
 
-    .nav-bar {
-      background: rgba(0, 0, 0, 0.9);
-      padding: 12px 0;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-    }
+    .nav-bar {
+      background: rgba(0, 0, 0, 0.9);
+      padding: 12px 0;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+    }
 
-    .nav-bar ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-    }
+    .nav-bar ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
 
-    .nav-bar ul li {
-      margin: 0 25px;
-    }
+    .nav-bar ul li {
+      margin: 0 25px;
+    }
 
-    .nav-bar ul li a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 18px;
-      position: relative;
-      transition: color 0.3s ease;
-    }
+    .nav-bar ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 18px;
+      position: relative;
+    }
 
-    .nav-bar ul li a::after {
-      content: "";
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: #ffca28;
-      transition: width 0.3s;
-    }
+    .nav-bar ul li a::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #ffca28;
+      transition: width 0.3s;
+    }
 
-    .nav-bar ul li a:hover::after {
-      width: 100%;
-    }
+    .nav-bar ul li a:hover::after {
+      width: 100%;
+    }
 
-    main {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      padding: 40px 10px;
-      gap: 30px;
-    }
+    main {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 40px 10px;
+      gap: 30px;
+    }
 
-    .card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-      overflow: hidden;
-      max-width: 300px;
-      text-align: center;
-      transition: transform 0.5s ease, box-shadow 0.5s ease;
-    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+      overflow: hidden;
+      max-width: 300px;
+      text-align: center;
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
 
-    .card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    }
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
 
-    .card img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
 
-    .card p {
-      padding: 15px;
-      font-size: 16px;
-      color: #333;
-    }
+    .card p {
+      padding: 15px;
+      font-size: 16px;
+      color: #333;
+    }
 
-    footer {
-      background: #222;
-      color: white;
-      padding: 30px 20px;
-      text-align: center;
-    }
+    footer {
+      background: #222;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
 
-    .footer-body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-    }
+    .footer-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
 
-    .footer-body ul {
-      list-style: none;
-      padding: 0;
-      display: flex;
-      gap: 20px;
-    }
+    .footer-body ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 20px;
+      margin: 10px 0 0 0;
+    }
 
-    .footer-body ul li a {
-      color: #bbb;
-      text-decoration: none;
-      transition: color 0.3s;
-    }
+    .footer-body ul li a {
+      color: #bbb;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
 
-    .footer-body ul li a:hover {
-      color: #fff176;
-    }
-  </style>
+    .footer-body ul li a:hover {
+      color: #fff176;
+    }
+  </style>
 </head>
 <body>
 
-  <div class="nav-bar">
-    <ul>
-      <li><a href="https://sushanta890.github.io/Room/">Room</a></li>
-      <li><a href="S.K Bank/index.html">Bank</a></li>
-      <li><a href="https://sushanta890.github.io/ATM-details/">ATM</a></li>
-      <li><a href="#">Gallery</a></li>
-    </ul>
-  </div>
+  <div class="nav-bar">
+    <ul>
+      <li><a href="https://sushanta890.github.io/Room/">Room</a></li>
+      <li><a href="S.K Bank/index.html">Bank</a></li>
+      <li><a href="https://sushanta890.github.io/ATM-details/">ATM</a></li>
+      <li><a href="#">Gallery</a></li>
+    </ul>
+  </div>
 
-  <main>
-    <div class="card">
-      <img src="img/bank-manager.png" alt="Bank Manager">
-      <p>Bank Manager Details & Dashboard</p>
-    </div>
-    <div class="card">
-      <img src="img/room.png" alt="Room System">
-      <p>Room Rent, Utilities & Tracking</p>
-    </div>
-    <div class="card">
-      <img src="img/atm.png" alt="ATM Panel">
-      <p>ATM PIN, Withdraw & Balance System</p>
-    </div>
-  </main>
+  <main>
+    <div class="card">
+      <img src="img/bank-manager.png" alt="Bank Manager">
+      <p>Bank Manager Dashboard</p>
+    </div>
+    <div class="card">
+      <img src="img/room.png" alt="Room System">
+      <p>Room Rent, Utilities, and Tracking</p>
+    </div>
+    <div class="card">
+      <img src="img/atm.png" alt="ATM Panel">
+      <p>ATM PIN, Balance Check, Withdraw</p>
+    </div>
+  </main>
 
-  <footer>
-    <div class="footer-body">
-      <div>SK Bank © 2025</div>
-      <p>Empowering Your Digital Banking Needs</p>
-      <ul>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
-        <li><a href="#">Terms</a></li>
-        <li><a href="#">Privacy</a></li>
-      </ul>
-    </div>
-  </footer>
+  <footer>
+    <div class="footer-body">
+      <div>SK Bank © 2025</div>
+      <p>Empowering Your Digital Banking Experience</p>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Terms</a></li>
+        <li><a href="#">Privacy</a></li>
+      </ul>
+    </div>
+  </footer>
 
 </body>
 </html>
